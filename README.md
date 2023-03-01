@@ -13,7 +13,7 @@
  	(s1) $ vde_switch -s s1 -M `pwd`/s1_term -d
  	(s1) $ vdeterm s1_term
  	
- 	(h1) $ ./linux ubd0=h1.cow,rootfs.ext4 eth0=vde,s1
+ 	(h1) $ ./linux ubd0=h1.cow,rootfs.ext4 eth0=vde,s1		[./linux ubd0=h1.cow,rootfs.ext4 eth0=vde,s1,indirizzo mac,numero di porta]
  	
  	(h2) $ ./linux ubd0=h2.cow,rootfs.ext4 eth0=vde,s1
 		
