@@ -1,4 +1,4 @@
-  # UNIMORE-reti
+ # UNIMORE-reti
 
   $ ln -s ~/.marionnet/kernels/linux-4.10-mod linux
   $ ln -s ~/.marionnet/filesystems/machine-rootfs.ext4 rootfs.ext4
