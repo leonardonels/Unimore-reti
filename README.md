@@ -2,6 +2,10 @@
 
  	$ ln -s ~/.marionnet/kernels/linux-4.10-mod linux
  	$ ln -s ~/.marionnet/filesystems/machine-rootfs.ext4 rootfs.ext4
+	
+	$ ip addr add dev eth0 192.168.1.1
+	$ ip link set dev eth0 up [down]
+	$ ip link show
 
 	# creare un nodo con due dischi virtuali
  	$ dd if=/dev/zero of=myfs.ext4 bs=1 count=1 seek=300M
