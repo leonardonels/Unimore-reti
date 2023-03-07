@@ -4,6 +4,7 @@
  	$ ln -s ~/.marionnet/filesystems/machine-rootfs.ext4 rootfs.ext4
 	
 	$ ip addr add dev eth0 192.168.1.1
+	$ ip addr show dev eth0
 	$ ip link set dev eth0 up [down]
 	$ ip link show
 
