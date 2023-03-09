@@ -1,4 +1,16 @@
 	# UNIMORE-reti
+	
+	#come istallare marionnet su windows/linux
+	#requisiti per windows: abilitare la virtualizzazione da bios e hyperV da "attiva o disattiva funzionalità di windows"
+	|	powewrshell $ wsl --install -d Ubuntu-20.04
+	|	Ubuntu-20.04 $ sudo apt update
+	|	Ubuntu-20.04 $ sudo apt upgrade
+	|	Ubuntu-20.04 $ sudo dpg --add-architecture i386
+	|	Ubuntu-20.04 $ sudo apt update
+	|	Ubuntu-20.04 $ sudo apt install marionnet
+	|	
+	#work in progress
+	#
 
  	$ ln -s ~/.marionnet/kernels/linux-4.10-mod linux
  	$ ln -s ~/.marionnet/filesystems/machine-rootfs.ext4 rootfs.ext4
