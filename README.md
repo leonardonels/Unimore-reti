@@ -11,6 +11,10 @@
 	|	
 	#work in progress
 	#
+	
+	auto eth0
+	iface eth0 inet static
+		address 192.168.1.1
 
  	$ ln -s ~/.marionnet/kernels/linux-4.10-mod linux
  	$ ln -s ~/.marionnet/filesystems/machine-rootfs.ext4 rootfs.ext4
