@@ -1,5 +1,62 @@
 	# UNIMORE-reti
 	
+		#nano /etc/network/interfaces
+		#vale per nodi statici o per il dhcp_server nel caso di reti dhcp
+	auto eth0
+	iface eth0 inet static
+		address 192.168.1.1/24
+		gateway 192.168.1.254
+		post-up ip route add 192.168.2.0/24 via 192.168.1.254
+		post-up ip route add 1.1.1.1/32 dev eth0
+		
+		#vale per nodi di una rete dhcp
+	auto eth0
+	iface eth0 inet dhcp
+		hwaddress ethers 02:04:06:11:22:33	#necessario solo se si vuole dedicare un indirizzo ip alla macchina con questo indirizzo MAC
+		
+	#nano /etc/dnsmaq.conf
+		# don't look for other nameservers
+	no-resolv
+		# read /etc/ethers file
+	read-ethers
+		# network interface for DHCP
+	interface=eth0
+		# network domain name
+	domain=reti.org
+		#3 per default gateway; 6 per dns server
+	dhcp-option=3,192.168.1.254
+	dhcp-option=6,192.168.1.254
+		# or...
+		# dhcp-option=option:router,192.168.1.254
+		# dhcp-option=option:dns-server,192.168.1.254
+		#range di indirizzi da assegnare, l'ultimo parametro indica il lease time (tempo durante il quale il dhcp server riserva un indirizzo assegnato)
+	dhcp-range=192.168.1.10,192.168.1.15,1h
+		#utile ad assegnare un indirizzo specifico ad un determinato host
+	dhcp-host=02:04:06:11:22:33,client3,192.168.1.3,1h
+		# override address (can also use /etc/hosts)
+	address=/www.hackerz.com/192.168.1.1
+	
+		#per abilitare il dhcp server all'avvio
+	systemctl enable dnsmaq
+		#per avviare il dhcp server
+	service dnsmasq start
+	
+	#nano /etc/hosts
+	192.168.1.254 server server.reti.org
+	192.168.1.3 client3 client3.reti.org
+	
+	#nano /etc/ethers
+	02:04:06:11:22:33 192.168.1.3
+		
+	------------------------------------------------------------------
+		
+	$ ip addr add dev eth0 192.168.1.1
+	$ ip addr show dev eth0
+	$ ip link set dev eth0 up [down]
+	$ ip link show
+	
+	------------------------------------------------------------------
+	
 	#come istallare marionnet su windows/linux
 	#requisiti per windows: abilitare la virtualizzazione da bios e hyperV da "attiva o disattiva funzionalità di windows"
 	|	powewrshell $ wsl --install -d Ubuntu-20.04
@@ -12,17 +69,10 @@
 	#work in progress
 	#
 	
-	auto eth0
-	iface eth0 inet static
-		address 192.168.1.1
+	------------------------------------------------------------------
 
  	$ ln -s ~/.marionnet/kernels/linux-4.10-mod linux
  	$ ln -s ~/.marionnet/filesystems/machine-rootfs.ext4 rootfs.ext4
-	
-	$ ip addr add dev eth0 192.168.1.1
-	$ ip addr show dev eth0
-	$ ip link set dev eth0 up [down]
-	$ ip link show
 
 	# creare un nodo con due dischi virtuali
  	$ dd if=/dev/zero of=myfs.ext4 bs=1 count=1 seek=300M
