@@ -30,23 +30,27 @@
 		# dhcp-option=option:router,192.168.1.254
 		# dhcp-option=option:dns-server,192.168.1.254
 		#range di indirizzi da assegnare, l'ultimo parametro indica il lease time (tempo durante il quale il dhcp server riserva un indirizzo assegnato)
+		#il range e' mevessario affinche' il parametro dhcp-host venga preso in consideazione
 	dhcp-range=192.168.1.10,192.168.1.15,1h
+		#per assegnare un range di indirizzi utilizzati solo dalle macchine specificate tramite dhcp-host
+	dhcp-range=192.168.1.0,static
 		#utile ad assegnare un indirizzo specifico ad un determinato host
 	dhcp-host=02:04:06:11:22:33,client3,192.168.1.3,1h
 		# override address (can also use /etc/hosts)
 	address=/www.hackerz.com/192.168.1.1
 	
-		#per abilitare il dhcp server all'avvio
-	systemctl enable dnsmaq
-		#per avviare il dhcp server
-	service dnsmasq start
-	
+	#usare solo hosts e ethers e' deletereo poiche' le macchine vengono vincolate ad indirizzi non riservati
 	#nano /etc/hosts
 	192.168.1.254 server server.reti.org
 	192.168.1.3 client3 client3.reti.org
 	
 	#nano /etc/ethers
 	02:04:06:11:22:33 192.168.1.3
+	
+		#per abilitare il dhcp server all'avvio
+	systemctl enable dnsmasq
+		#per avviare il dhcp server
+	service dnsmasq start
 		
 	------------------------------------------------------------------
 		
