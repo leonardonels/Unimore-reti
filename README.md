@@ -8,7 +8,9 @@
 		gateway 192.168.1.254
 		post-up ip route add 192.168.2.0/24 via 192.168.1.254
 		post-up ip route add 1.1.1.1/32 dev eth0
-		
+		post-up ip route add -host 1.1.1.1/32 dev eth0		#cavo cross router-router
+
+
 		#vale per nodi di una rete dhcp
 	auto eth0
 	iface eth0 inet dhcp
