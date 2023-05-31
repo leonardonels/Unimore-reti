@@ -14,9 +14,9 @@
 		#vale per nodi di una rete dhcp
 	auto eth0
 	iface eth0 inet dhcp
-		hwaddress ethers 02:04:06:11:22:33	#necessario solo se si vuole dedicare un indirizzo ip alla macchina con questo indirizzo MAC
+		hwaddress 02:04:06:11:22:33	#necessario solo se si vuole dedicare un indirizzo ip alla macchina con questo indirizzo MAC
 		
-	#nano /etc/dnsmaq.conf
+	#nano /etc/dnsmasq.conf
 		# don't look for other nameservers
 	no-resolv
 		# read /etc/ethers file
@@ -54,6 +54,12 @@
 		#per avviare il dhcp server
 	service dnsmasq start
 		
+		#nano /etc/sysctl.conf
+		#uncomment la riga seguente
+	sysctl net.ipv4.ip_forward
+		
+		#per applicare la modifica
+	sysctl -p /etc/sysctl.conf		
 	------------------------------------------------------------------
 		
 	$ ip addr add dev eth0 192.168.1.1
