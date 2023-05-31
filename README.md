@@ -106,3 +106,11 @@
  	(h1-uml) # arping -0Bi eth0
  	(h2-uml) # ifconfig eth0 up
  	(h2-uml) # tcpdump -ni eth0
+	
+	------------------------------------------------------------------
+	
+	traffic shaping:
+	in sede di esame è richiesta la conoscenza di: TBF, HTB e FIFO_FAST.
+	[fifo_fast prevede code di priorità che vengono svuotate una alla volta]
+	
+	note: RANDOM_EARLY_DETECTION riduce la crescita delle code marcando alcuni datagram e simulando una perdita di pacchetti prima che avvenga.
