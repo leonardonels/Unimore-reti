@@ -9,6 +9,8 @@
 		post-up ip route add 192.168.2.0/24 via 192.168.1.254
 		post-up ip route add 1.1.1.1/32 dev eth0
 		post-up ip route add -host 1.1.1.1/32 dev eth0		#cavo cross router-router
+			#Ext deve limitare il traffico in uscita (ad esempio file disponibili su Ext e scaricati da qualunque altra macchina) a una bandwidth massima di 10MBit/s.
+		post-up tc qdisc add dev eth0 root tbf rate 10Mbit latency 50ms burst 1539		#traffic shaping
 
 
 		#vale per nodi di una rete dhcp
@@ -60,6 +62,46 @@
 		
 		#per applicare la modifica
 	sysctl -p /etc/sysctl.conf		
+	------------------------------------------------------------------
+	
+		#iptables
+	iptables -t filter -P INPUT DROP
+	iptables -t filter -P OUTPUT DROP
+	iptables -t filter -P FORWARD DROP
+	
+		#DHCP
+	iptables -t filter -A INPUT -i eth0.10 -p udp --dport 67 --sport 68 -j ACCEPT
+	iptables -t filter -A OUTPUT -o eth0.10 -p udp --sport 67 --dport 68 -j ACCEPT
+	
+		#DNS LAN
+	iptables -t filter -A INPUT -i eth0.10 -p udp --dport 53 -j ACCEPT
+	iptables -t filter -A OUTPUT -o eth0.10 -p udp --sport 53 -j ACCEPT
+	
+		#DNS DMZ
+	iptables -t filter -A INPUT -i eth0.20 -p udp --dport 53 -j ACCEPT
+	iptables -t filter -A OUTPUT -o eth0.20 -p udp --sport 53 -j ACCEPT
+	
+		#SERVER WEB EXT (con due vlan: .10 e .20)
+	iptables -t filter -A FORWARD -i eth0.10 -o eth1 -p tcp --dport www -s 10.0.1.0/25 -d {IP internet} -m state --state NEW,ESTABLISHED -j ACCEPT
+	iptables -t filter -A FORWARD -o eth0.10 -i eth1 -p tcp --sport www -d 10.0.1.0/25 -s {IP internet} -m state --state ESTABLISHED -j ACCEPT
+	
+	iptables -t filter -A FORWARD -i eth0.20 -o eth1 -p tcp --dport www -s 10.0.1.128/25 -d {IP internet} -m state --state NEW,ESTABLISHED -j ACCEPT
+	iptables -t filter -A FORWARD -o eth0.20 -i eth1 -p tcp --sport www -d 10.0.1.128/25 -s {IP internet} -m state --state ESTABLISHED -j ACCEPT
+	
+		#EXT POSSA CONTATTARE SRV (internet possa conattare il server della DMZ)
+	iptables -t filter -A FORWARD -i eth1 -o eth0.20 -p tcp --dport www -s {IP internet} -d {IP Srv - nella dmz} -m state --state NEW,ESTABLISHED -j ACCEPT
+	iptables -t filter -A FORWARD -o eth1 -i eth0.20 -p tcp --sport www -d {IP internet} -s {IP Srv - nella dmz} -m state --state ESTABLISHED -j ACCEPT
+	
+		#SSH H1
+	iptables -t filter -A INPUT -i eth0.10 -p tcp --dport ssh -s {IP H1} -m state --state NEW,ESTABLISHED -j ACCEPT
+	iptables -t filter -A OUTPUT -i eth0.10 -p tcp --sport ssh -d {IP H1} -m state --state ESTABLISHED -j ACCEPT
+
+	------------------------------------------------------------------
+	
+		#REGOLE DI NAT [10.0.1.129 corrisponde al server nella dmz]
+	iptables -t nat -A POSTROUTING -p tcp --dport www -s 10.0.1.0/24 -o eth1 -j MASQUERADE
+	iptables -t nat -A PREROUTING -i eth1 -p tcp --dport www -j DNAT --to-destination 10.0.1.129
+
 	------------------------------------------------------------------
 		
 	$ ip addr add dev eth0 192.168.1.1
