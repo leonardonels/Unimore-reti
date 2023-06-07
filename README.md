@@ -76,6 +76,9 @@
 	
 	#Ext deve limitare il traffico in uscita (ad esempio file disponibili su Ext e scaricati da qualunque altra macchina) a una bandwidth massima di 10MBit/s.
 		post-up tc qdisc add dev eth0 root tbf rate 10Mbit latency 50ms burst 1539		#traffic shaping
+	
+	#strumento di test
+		dd if=/dev/zero bs=10M count=1 | nc <netcat server> <netcat port>
 		
 	------------------------------------------------------------------
 	
@@ -83,6 +86,15 @@
 		iptables -t filter -P INPUT DROP
 		iptables -t filter -P OUTPUT DROP
 		iptables -t filter -P FORWARD DROP
+		
+	#PING - ICMP
+		#ping bidirezionale
+		iptables -t filter -A FORWARD -p icmp -i eth0(interfacia A del ping) -o eth0(interfacia B del ping) -j ACCEPT
+		iptables -t filter -A FORWARD -p icmp -o eth0(interfacia A del ping) -i eth0(interfacia B del ping) -j ACCEPT
+		
+		#ping monodirezionale
+		iptables -t filter -A FORWARD -p icmp -i eth0(interfacia di richiesta del ping) -o eth0(interfaccia di risposta del ping) -j ACCEPT					#da testare
+		iptables -t filter -A FORWARD -p icmp -o eth0(interfaccia di richesta del ping) -i eth0(interfaccia di risposta del ping) -state --state RELATED,ESTABLISHED -j ACCEPT	#da testare
 	
 	#DHCP
 		iptables -t filter -A INPUT -i eth0(interfaccia ingresso verso il client) -p udp --dport 67 --sport 68 -j ACCEPT
@@ -108,14 +120,14 @@
 		iptables -t filter -A FORWARD -i eth0(interfaccia ingresso verso il client) -o eth0(interfaccia in uscita verso il server) -j ACCEPT
 		iptables -t filter -A FORWARD -o eth0(interfaccia ingresso verso il client) -i eth0(interfaccia in uscita verso il server) -m state --state RELATED,ESTABLISHED -j ACCEPT
 	
-	#SSH H1
+	#SSH
 		iptables -t filter -A INPUT -i eth0.10 -p tcp --dport ssh -s {IP H1} -m state --state NEW,ESTABLISHED -j ACCEPT
 		iptables -t filter -A OUTPUT -i eth0.10 -p tcp --sport ssh -d {IP H1} -m state --state ESTABLISHED -j ACCEPT
 
 	------------------------------------------------------------------
 	
 	#REGOLE DI NAT [10.0.1.129 corrisponde al server nella dmz]
-		iptables -t nat -A POSTROUTING -p tcp --dport www -s 10.0.1.0/24 -o eth1 -j MASQUERADE
+		iptables -t nat -A POSTROUTING -p tcp --dport www -s (netid da mascherare) -o eth1 -j MASQUERADE
 		iptables -t nat -A PREROUTING -i eth1 -p tcp --dport www -j DNAT --to-destination 10.0.1.129
 
 	------------------------------------------------------------------
