@@ -227,14 +227,40 @@
 						header (comune):
 							numero di versione
 							tipo:
-								1 HELLO: scoperta di router, scambio di parametri sul funzionamento OSPF adiacenti {32}
-								2 DB description: 
-								3 link state req
-								4 link state update
-								5 link state ACK
+								1 HELLO: scoperta di router, scambio di parametri sul funzionamento OSPF adiacenti
+								2 DB description: contenuto del DB
+								3 link state req: richiesta di informazioni relative a una porzione del link state DB
+								4 link state update : infromazioni relative a link mandato in risposta a request, usato per propagare periodicamente gli update nella struttura della rete
+								5 link state ACK: acknowledgement della ricezione di un messaggio di update
 							checksum
 							tipo e informazioni per autenticazione
 						corpo (che dipende dal tipo)
+					consente una suddivisione di grandi AS in aree così da avere una gerarchia interna a due livelli:
+						aree locali (1-x)
+						area backbone
+							instrada il traffico tra le aree del AS
+							contiene tutti i router di confine (boarder router) (gateway router)
+								router di confine che instradano il traffico verso altri AS
+							router di backbone instrada il traffico all'interno dell'area di backbone
+							router di confine area comunicano i percorsi verso altre aree locali dell'AS ai router di quell'area
+					si usa link state per ogni area
+			Protocolli:
+				che offrono servizi:
+					portano "dati utente"
+					le loro DPU vengono imbustate in accordo alla pila iso-osi
+					es.: tcp
+				di supporto:
+					portano "dati di controllo" e non offrono direttamente servizi
+					LA LORO POSIZIONE NELLO STACK È INDIPENDENTE DA COME VENGONO IMBUSTATE LE PDU
+					es.: ICMP(lvl3), ARP/RARP(lvl2), protocolli di routing(lvl2)
+						potocollo ICMP (Internet Control Message Protocol):
+							notifica situazioni di errore o animalie
+							supporta debugging interattivo della rete
+							funziona a IP e viaggia in pacchetti IP
+							porta informazioni di controllo e di notifica errori
+							NON porta dati
+							interviene quando c'è una anomalia nel processo {43}
+			
 	
 	
 	
