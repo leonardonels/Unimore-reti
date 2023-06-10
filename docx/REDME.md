@@ -98,4 +98,55 @@
 					forwarding: invio corretto
 					egress: comunicazione corretta della vlan sorgente
 				gli ISP usano un secodno standard 802.1AD che divide la rete in due vlan, una prima S-tag gestita solo dall'isp ed una seconda C-tag per l'utente
-	[3]	IP	
+	[3]	IP
+			consegna non affidabile dei pacchetti:
+				consegna priva di connessioni
+					ogni pacchetto è trattato in modo indipendente da tutti gli altri
+				consegna con impegno (best efford):
+					tentativo di consegnare ogni pacchetto (possibili inaffidabilità)
+				consegna non garantita, i pacchetti possono essere persi, duplicati, ritardati, o conseganti senza ordine
+			layout del datagram ip
+				header del datagram:
+					VERS: 4 bit, bersione del protocollo IP
+					HLEN: 4 bit, lunghezza dell'header del datagram in parole da 32 bit, generalmente 5
+					SERVICE TYPE: 8 bit , specifica come si richiede che sia trattato il datagram (D - basso ritardo; T - alto throughput; R - alta affidabilità; DS - DiffServ, definisce per-hop behavior, usa class selector per la priorità di traffico come best effort, priority o immediate; ECN - explicit congestion notification)
+					TOTAL LENGHT: 16 bit, lunghezza del datagram IP in byte (64 kbyte)
+					IDENTIFICATION: 16 bit, intero che indentifica il datagram
+					FLAGS: 4 bit, controllo della frammentazione (0 - reserved; DF - don't fragment; MF - more fragments)
+					FRAGMENT OFFSET: 12 bit, la posizione del frammento nel datagram originale
+					TIME TO LIVE: 8 bit, decremento da ciascun router che gestisce il datagram, se uguale a 0 il datagram viene eiliminato
+					PROTOCOL: 8 bit, indica quale protocollo di livello superiore può utilizzare i dati contenuti nel datagram
+					HEADER CHECKSUM: 16 bit, serve per controllare l'integrità dei dati trsportati nell'header
+					SOURCE IP ADDRESS: 32 bit
+					DESTINATION IP ADDRESS: 32 bit
+					IP OPTIONS: 0-32 bit, campo opzionale di lunghezza variabile, server per testing e debugghing della rete
+					PADDING: campo opzionale, serve a far allineare l'header ai 32 bit, presente solo se ip options presenta una lunghezza variabile
+				payload
+			indirizzo ip è diviso in:
+				netid: prefisso di rete, identifica la rete
+					calssi di net id:
+						classe a: 1 byte netid e 3 byte host id, primo byte 0xxx, da 0.1.0.0 a 127.255.255.255
+						classe b: 2 byte netid e 2 byte host id, primo byte 10xx, da 128.0.0.0 a 191.255.255.255
+						classe c: 3 byte netid e 1 byte host id, primo byte 110x, da 192.0.0.0 a 223.255.255.255
+						classe d: indirizzi di multicast, primo byte 1110, da 224.0.0.0 a 239.255.255.255
+						classe e: indirizzi riservati per esperimenti, primo byte 1111, da 240.0.0.0 a 255.255.255.254
+				hostid: identifica l'host all'interno della rete
+			un host conosce il proprio indirizzo ip tramite:
+				configurazione manuale
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
