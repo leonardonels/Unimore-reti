@@ -259,7 +259,61 @@
 							funziona a IP e viaggia in pacchetti IP
 							porta informazioni di controllo e di notifica errori
 							NON porta dati
-							interviene quando c'è una anomalia nel processo {43}
+							interviene quando c'è una anomalia nel processo di instradamento e una condizione di errore deve essere notificata al mittente del pacchetto
+							utile a testare la taggiungibilità del livello IP di un host remoto con un dato indirizzo
+							se il pacchetto viene frammentato solo il primo frammento puo generare un messaggio di errore ICMP
+							broadcast e multicast non generano ICMP
+							DESTINETION_UNREACHABLE:
+								un gateway vede la rete di destinazione a disnatnza infinita
+								l'host non risponde ad una chiamata ARP
+								l'host destinazione non conosce il protocollo del pacchetto
+								il pacchetto non può essere frammentato (è richiesta la frammentazione e DF è impostato a 1)
+			IPV6:
+				uso di numeri in notazione esadecimale
+				8 blocchi di 16 bit (4 cifre ciascuno)
+				regola: gruppi di 4 cifre di valore 0 posso essere semplificati ad una unica cifra 0 oppure omessi
+				il prefisso ::/96 di 96 zeri trasforma un udirizzo IPV4 in IPV6
+				header ipv6 (40 bit) è composto:
+					version: 4 bit, vale 6 per ipv6
+					traffic class: 8 bit, analogo al campo tipe of service di ipv4, indica la priorità del datagramma
+					flow label: 20 bit: ipostato da una sorgente per indicare pi	u datagrammi come apparteneti ad un unico flusso di traffico, i router possono usare questo campo per istradare allo stesso modo tutti i datagrammi di uno stesso flusso, se non usato ha valore nullo
+					payload lenght: 16 bit
+					next header: tipo di protocollo usato per il payload
+					hop limit: come il TTL per ipv4
+					sorce address
+					destination address
+				ipv6 parte dal presupposto che frammentare è male
+				la frammentazione non è gestita a livello di singoli router intermedi
+				solo la sorgente può frammentare
+					in caso di messaggio troppo grande per il livello 2
+						viene scartato il messaggio
+						si genera il messaggio di errore ICMP
+				la corruzione dell header è estremamente rara, la generazione del checksum al variare del TTl è onerosa a livello dei router, ipv6 decide di non gestire questa operazione
+				è possibile avere opzioni come nel payload del datagram IP
+				NDS Neighbor Discovery Protocol:
+					protocollo ipv6 per:
+						apprendimento di parametri come MTU e hop limit
+						configurazionr automatica di indirizzi
+						address resolution (come RARP)
+						neighbor unreachability detection: identificare quando un vicino non è più raggiungibile
+						duplicate address detection
+						neighbor discovery: 5 tipi di pacchetto ICMPv6
+							router solicitation: inviato quando una interfaccia viene attivata, chiede ai router di mandare messaggi di tipo router advertisement immediatamente
+							router advertisement: i router inviano periodicamente un messaggio che informa la rete della loro presenza, anche in risposta di un ruouter solicitation
+								contenuto del messaggio:
+									lista di prefissi usati per decidere il routing
+									flag che indicano usi specifici di alcuni prefissi
+									parametri come MTU o numero di hop che sono associati ad una destinazione
+							neighbor solicitation: mandato da un nodo per ottenere un indirizzo mac di un vicino, usato anche per determinare se un vicino è ancora raggiungibile (arping)
+							neighbor advertisement: risposta a messaggio di tipo neighbor solicitation
+							redirect: informare un router di una destinazione migliore per raggiungere una destinazione
+						link-layer address change: un nodo che sa di aver cambiato indirizzo MAC può mandare un messaggio di tipo neighbor advertisement agli altri nodi per aggiornare la loro cache
+						inbound load balancing: i router possono non cmunicare i loro MAC address per consentire una risposta selettiva qaundo più ruoter possono gestire lo stesso percorso (es.: round robin policy)
+				per aiutare la diffusione di ipv6 sono stati itrodotti i tunnel ip:
+					per connettre isole, aree, in cui è stato implemnato ipv6 al 100% si inseriscono i d iatagramma ipv6 nel payload di un datagramma ipv4
+
+				
+				
 			
 	
 	
