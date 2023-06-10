@@ -76,7 +76,7 @@
 			RARP: REVERSE ADDRESS RESOLUTION PROTOCOL
 				operazione inversa ad arp, dato un indirizzo mac ricava l'indirizzo IP corrispondente
 			Apparati di rete:
-				Hub:
+				Hub: semplici ed economici, ripetitore a livello dei singoli bit
 				Bridge:
 				Switch:
 				Switch di livello 3:
