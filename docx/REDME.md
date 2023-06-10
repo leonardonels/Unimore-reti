@@ -81,6 +81,21 @@
 				Switch:	sono praticamente bridge ad alte prestazioni con molte interfacce
 					switch store-and-forward: attende l'arrivo dell'intero frame prima di inoltrarlo
 					switch cut-through: attende l'arrivo della parte del frame contente l'indirizzo di destinazione per iniziare a instradare il pacchetto che ta ancora arrivando, non verifica il byte di controllo
-				Switch di livello 3:
-		
+			VLAN: Virtual LAN
+				lo standard 802.1Q del 2003 definisce le specifiche che permettono di definire più reti locali virtuali (VLAN) distinte, utilizzando una stessa infrastruttura fisica
+				ogni vlan si comporta come se fosse una rete locale separata dalle altre
+					i pacchetti broadcast sono confinato all'interno della vlan
+					la comunicazione di livello 2 è confinata all'interno della vlan
+					la connettività tra diverse vlan può essere realizzata solo a livello 3 attraverso routing
+				vlan permettono un risparmio, aumento di prestazioni, aumento della sicurezza e una maggiore flessibilità
+				la connettività tra diverse vlan può essere realizzata solo a livello 3 attraverso routing
+				le vlan possono essere:
+					port based: assegnazione statica port-vlan (partizionamento di un bridge fisico i più bridge logici), non richede l'osservanza dello standard 802.1Q, ma solo che il bridge sappia configurarla secondo lo standard
+					tagged: viene usato lo standard 802.1Q per condividere lo stesso link fisico tra vlan differenti, LO STANDARD DEFINISCE UNA MODIFICA DEL FORMATO DEL FRAME ETHERNET AGGIUNGENDO 4 BYTE CHE TRASPORTANO LE INFORMAZIONI SULLA VLAN, il tag deve essere comune nella vlan
+					
+				per saper gestire reti virtuali i bridge devono saper svolgere funzioni di:
+					ingress: comprendere la vlan sorgente
+					forwarding: invio corretto
+					egress: comunicazione corretta della vlan sorgente
+				gli ISP usano un secodno standard 802.1AD che divide la rete in due vlan, una prima S-tag gestita solo dall'isp ed una seconda C-tag per l'utente
 	
