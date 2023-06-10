@@ -132,7 +132,21 @@
 						classe e: indirizzi riservati per esperimenti, primo byte 1111, da 240.0.0.0 a 255.255.255.254
 				hostid: identifica l'host all'interno della rete
 			un host conosce il proprio indirizzo ip tramite:
-				configurazione manuale
+				configurazione manuale: configurazione da parte dell'amministratore del sistema
+				DHCP: Dynamic Host Configuration Protocol, allocazione dinamica effettuata da un server speciale
+			limited broadcast address: tutti i bit uguali a 1 255.255.255.255
+			this host in thi network: tutti i bit a 0 0.0.0.0
+			network address: ip address con hostid a 0
+			ip broadcast address: ip address con host id a 1
+			netmask: indica i bit di netid mediante and logico con il netid, es: 11111111.11111111.11111111.00000000
+			subnetting e supernetting:
+				opportunità:
+					sottoclassi di indirizzi ip (subnet), per otganizzazioni
+					sopraclassi di indirizzi ip (supernet), per ISP
+				vantaggi: 
+					maggiore flessibilità nella ripartizione degli indirizzi all'interno di una organizzazione
+					si facilitano le operazioni di routing idetificando insiemi di indirizzi
+			
 	
 	
 	
