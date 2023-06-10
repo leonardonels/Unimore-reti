@@ -146,7 +146,12 @@
 				vantaggi: 
 					maggiore flessibilità nella ripartizione degli indirizzi all'interno di una organizzazione
 					si facilitano le operazioni di routing idetificando insiemi di indirizzi
+			l'architettura della rete è lascamente gerarchica
+				host terminali -> isp locali -> isp regionali -> isp globali
+			i router sono aggregati in regioni chiamte Autonomus System (AS)
+				Autonumus System: ente gestore di una rete
 			
+
 	
 	
 	
