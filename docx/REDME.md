@@ -36,10 +36,49 @@
 					IP: (network) protocollo per la consegna dei pacchetti, privo di connessione, non affidabile
 					H2N: comprende il livello fisico e il livello data link del modello ISO/OSI
 	
-	[1-2] H2N	Modalità di trasmissione:
+	[1-2] H2N	Esempi:
+				LAN Wired
+				LAN Wireless
+				Mediante modem
+			si divide in:
+				livello 1 fisico
+				livello 2 data link
+					framing (incapsulamento del frame)
+					accesso al link
+					controllo di flusso
+					ricerca di errori
+					correzione di errori
+					half duplex o full duplex
+			simile a protocollo trasporto (cone tcp):
+				h2n si opera a livello di singolo link
+				trasporto opera a livello di host end-to-end
+			il livello h2n comunica tramite FRAME
+			collegamenti:
+				broadcast: molti host connessi ad un unico canale di comunicazione (Wireless LAN)
+				punto-punto: due host per mezzo di comunicazione
+			Modalità di trasmissione:
 				Unicast: uno a uno
 				Multicast: uno a molti
 				Anycast: uno ad ALMENO uno
 				Breadcast: uno a tutti
+			NIC: Network Interface Card (con connettore RJ45)
+			MAC: Media Access Control
+			FRAME:
+				Preambolo: 8 byte primi 7 10101010, l'ultimo 10101011, serve sincronizzare i clock.
+				Indirizzo di destinazione: 6 byte, contiene l'indirizzo MAC, quando un adattatore riceve un frame, lo scarta se l'indirizzo MAC di destinazione non corrisponde la proprio
+				Indirizzo di sorgente: 6 byte, contiene l'indirizzo MAC
+				Tipo: 2 byte, serve all'adattatore per sapere a quale dei protocolli dello strato di rete debba essere passato il campo dati di ciascun frame ricevuto 
+				Dati: minimo di 46 byte, massimo di 1500 byte, contiene il datagramma IP contenete i dati reali, se superano i 1500byte devono essere frammentati o passati al jumbo frame con un massimale di 9000 byte, se sono meno di 46 byte, dimensione minima, il campo dati deve essere riempito (stuffing) con byte di riempimento che verranno rimossi in ricezione.
+				CRC: 4 byte, controllo a ridondanza ciclica, permette all'adattatore che riceve i dati di rilevare la presenza di un errore nei bit del frame ricevuto, quando un host riceve il frame ricalcola il CRC e vede se corrisponde.
+			ARP: ADDRESS RESOLUTION PROTOCOL
+				gli indirizzi ip non sono riconosciuti in hardware, ARP si occupa di trasformare l'indirizzo IP di un host della stessa LAN nel corrispondente indirizzo MAC
+				è incluso nella suite TCP/IP, richiede in broadcast, riceve la risposta in unicast, ciascun host effettua un caching temporaneo delle risoluzioni arp
+			RARP: REVERSE ADDRESS RESOLUTION PROTOCOL
+				operazione inversa ad arp, dato un indirizzo mac ricava l'indirizzo IP corrispondente
+			Apparati di rete:
+				Hub:
+				Bridge:
+				Switch:
+				Switch di livello 3:
 		
 	
