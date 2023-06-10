@@ -158,7 +158,52 @@
 					internet exchange point: tipicamente consorzi indipendenti senza scopo di lucro, talvolta creati fra AS, talvolta supoortati da finanziamenti pubblici, offorno servizi tra gli associati, ma anche ad altri
 						permettono agli AS di scambiarsi traffico mediante protocollo BGP
 			dal punto di vista delle applicazioni di rete, internet è una unità trasparente, nella maggior parte dei casi
-			
+			IP Forwarding (inoltro): 
+				meccanismo con cui un router trasferisce i pacchetti da una interfaccia d'ingresso a quella di uscita
+				viene effettuato da ogni router
+				il next hop router appartiene ad una rete alla quale il router è collegato direttamente
+				ogni host e ogni router ha una tabella di routing in cui ciascuna riga fornisce il next-hop router per ogni possibile destinazione (le tabelle possono arrivare a 50k righe)
+				tramite tecniche di aggregazione ogni riga può fornire informazioni per molte destinazioni
+				le tabelle seguono la regola del LONGEST PREFIX MATCHING che le vogliono ordinate con prima le maschere più lunghe (es. /25) e poi le più corte (es. /20)
+				si può utilizzare anche il router di default comune a più indirizzi di destinazione oppure il router geografico
+			caratteristiche delle tabelle di routing:
+				routing statico:
+					la tabella non è modificata dal router, da usare nel caso di reti piccole con pochi cambiamenti, sconveniente nel caso di cambiamenti topologici
+				routing dinamico:
+					la tabella di routing è modificabile dal router al variare delle condizioni sulla rete, lo scambio delle informazioni tra router avviene tramite protocolli quali RIP, OSPF o BGP
+			algoritmi di routing:
+				obiettivo: determinatre il percorso ottimale, costo minimo, uso di grafico pesato
+				fattori statici: topologia della rete
+				fattori dinamici: traffico della rete, guasti
+				anche le politiche di routing dei vari router influenzano il routing
+				principali algoritmi:
+					routing distribuito: nessun nodo ha una informzione completa del costo di tutti i link della rete, es. distance vector protocol
+						distance vector protocol: viene scambiato un vettore di distanze rispetto alle varie destinazioni (algoritmo di Bellman-Ford)
+							data l'estensione della rete non si può salvare la distanza da ogni nodo, inoltre per evitare cicli si rende necessario inviare anche il percorso, ciò permette al router di verificare di non essere presente nel percorso tra lui e la destinazione, diventa un problema la quantità di dati trasmessi, proporzionale all distanza tra i nodi
+					routing centralizzato: ogni nodo possiede un'informazione globale della rete, es link state protocol
+						link state protocol:
+							ogni nodo calcola lo stato dei link ad esso connessi, poi, periodicamente, trasmette identità e costi dei link connessi, ciascun nodo calcola i cammini di costo minimo verso tutti gli altri nodi della rete mediante l'algoritmo di Dijkstra
+					periodicamente vengono inviati in broadcast su tutti i link del nodo dei pacchetti LSP con le seguenti infromazioni:
+						node ID
+						lista di vicini e costo dei rispettivi link
+						informazioni aggiuntive:
+							numero di sequenza per accorgersi di errori in caso di delivery out-of-order delle informazioni
+							TTL per evitare di usare informazioni vecchie e quindi non affidabili
+					la propagazione delle informazioni avviene attraverso flooding (inondazione):
+						quando un nodo riceve un LSP, se è più recente viene salvato nel database e una copia viene inoltrata su tutti i link connessi al nodo, altrimenti viene scartato
+					link state vs distance vector
+						LS usa messaggi più piccoli
+						LS propaga un numero di messaggi decisamente molto più grande [O(n) n nodi del grafo]
+						DV comunica solo ai vicini = meno messaggi
+						LS molto veloce
+						DV veloce solo tramite aggiornamenti molto frequenti, così rischiando pero instabilità
+						LS ha un requisito di memorizzazione molto alto
+						DV mantiene salvate solo lo stato dei vicini
+						LS calcola i percorsi in maniera indipendente da ogni nodo
+						DV calcola i percorsi in base agli alti nodi
+					link state viene usato solitamente negli AS
+					distance vector viene solitamente usato tra AS
+					
 
 	
 	
