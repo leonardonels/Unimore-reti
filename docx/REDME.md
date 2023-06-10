@@ -203,8 +203,38 @@
 						DV calcola i percorsi in base agli alti nodi
 					link state viene usato solitamente negli AS
 					distance vector viene solitamente usato tra AS
-					
-
+			per il routing all'interno di un AS (intra-AS) i router utilizzano qualche interior gateway protocol dove i router di un AS possono possedere un'informazione completa du tutti gli altri router dell'AS
+			per il routing verso altroi AS (inter-AS) viene utilizzato qualche Exterior Gateway Protocol (prima EGP, ora BGP, Border Gateway Protocol) ciascun AS può usare metriche multiple per il routing interno, ma appare come un unico AS ad altri AS
+			in base agli accordi commerciali tra AS, questi possono essere impostati come:
+				stub: AS 2 è connesso al mondo solo tramite AS1
+				multi-homed: gli AS sono connessi tra di loro, ma non permettono il traffico di cui non sono origine o destinazione
+				transit: AS che permette il forwarding di traffico di cuo non è ne origine ne destinazione
+			intra-AS: si usa prevalentemente OSPF (open shortest path first, basato su link state), successore di RIP (routing information protocol, basato su distance vector)
+			inter-AS: BGP ha sostituito EGP che presupponeva una struttura ad albero senza cicli, entrata in crisi con la introduzione delle dorsali; BGP sfrutta un algoritmo di distance vector
+				BGP fa uso di connessioni TCP semi-permanenti, due peer BGP che si scambiano messaggi sulla connessione TCP formano una sessione BGP
+					sessioni che possono essere difinite:
+						E-BGP: sessioni etserne tra router di AS diversi
+						I-BGP: sessioni interne tra router dello stesso AS
+					Border Router: gestisce sessioni E-BGP
+					Transit Router: gestisce sessioni I-BGP
+				OSPF open source, basato su link state protocol
+					rispetto a RIP, OSPF
+						aumenta la sicurezza tramite crittografia dei messaggi 
+						permette di usare più percorsi per instradare il traffico (rip solo uno)
+						integra supporto unicast e multicast
+						permette di strutturare grandi domini di instradamento in gerarchie AS
+					OSPF è strutturato:
+						header (comune):
+							numero di versione
+							tipo:
+								1 HELLO: scoperta di router, scambio di parametri sul funzionamento OSPF adiacenti {32}
+								2 DB description: 
+								3 link state req
+								4 link state update
+								5 link state ACK
+							checksum
+							tipo e informazioni per autenticazione
+						corpo (che dipende dal tipo)
 	
 	
 	
