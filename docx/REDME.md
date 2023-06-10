@@ -76,9 +76,11 @@
 			RARP: REVERSE ADDRESS RESOLUTION PROTOCOL
 				operazione inversa ad arp, dato un indirizzo mac ricava l'indirizzo IP corrispondente
 			Apparati di rete:
-				Hub: semplici ed economici, ripetitore a livello dei singoli bit
-				Bridge:
-				Switch:
+				Hub: semplici ed economici, ripetitore a livello dei singoli bit in ingresso su di una interfaccia su di tutte le interfaccie, gli hub non isolano il DOMINIO DELLE COLLISIONI
+				Bridge: (software) dispositivo di livello 2 (link layer), opera a livello di frame esaminando l'header dei frame ed inoltrandoli selettivmente, esegue un filtraggio sul MAC, isola i dominii di collisione, trsaparente per gli host, mantengono delle tabelle di filtraggio costruite automaticamente senza bisogno dell'intervento di amministratori di rete, il bridge impara la localizzazione del mittente dalla ricezione, nelle tabelle di filtraggio usa un parmetro TTL, generalmente di 60 minuti
+				Switch:	sono praticamente bridge ad alte prestazioni con molte interfacce
+					switch store-and-forward: attende l'arrivo dell'intero frame prima di inoltrarlo
+					switch cut-through: attende l'arrivo della parte del frame contente l'indirizzo di destinazione per iniziare a instradare il pacchetto che ta ancora arrivando, non verifica il byte di controllo
 				Switch di livello 3:
 		
 	
