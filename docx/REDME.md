@@ -149,7 +149,15 @@
 			l'architettura della rete è lascamente gerarchica
 				host terminali -> isp locali -> isp regionali -> isp globali
 			i router sono aggregati in regioni chiamte Autonomus System (AS)
-				Autonumus System: ente gestore di una rete
+				Autonumus System: 
+					un insieme di reti IP (network prefix) e di router sotto il controllo di una organizzazione (o consorzio di) nell'ambito del quale si utilizza una politica di interior routing. Gli AS sono le unità delle politiche di exterior routing, come nel caso del BGP
+					gli AS dall'esterno vengono visti come un'unica entità
+					ciascun AS è caratterizzato da un numero identificativo su 2 byte (1-64511, 64512-65536 sono riservati) e uno o più network id o network prefix
+				gli ISP regionali (nazionali) e internazionali sono collegati tra di loro al più alto livello dalla gerarchia, mediante peering point (privati) oppure mediante Internet Exchange Point (una volta chiamati network access point)
+					peering point: interconnessione stabilita tra peer, in questo caso AS, con lo scopo di scambiarsi il traffico dei relativi utenti
+					internet exchange point: tipicamente consorzi indipendenti senza scopo di lucro, talvolta creati fra AS, talvolta supoortati da finanziamenti pubblici, offorno servizi tra gli associati, ma anche ad altri
+						permettono agli AS di scambiarsi traffico mediante protocollo BGP
+			dal punto di vista delle applicazioni di rete, internet è una unità trasparente, nella maggior parte dei casi
 			
 
 	
