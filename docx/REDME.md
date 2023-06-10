@@ -98,4 +98,4 @@
 					forwarding: invio corretto
 					egress: comunicazione corretta della vlan sorgente
 				gli ISP usano un secodno standard 802.1AD che divide la rete in due vlan, una prima S-tag gestita solo dall'isp ed una seconda C-tag per l'utente
-	
+	[3]	IP	
