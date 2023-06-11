@@ -337,8 +337,70 @@
 			aggiunta dell'id del messaggio per evitare duplicati o ritrasmissioni non volute
 			aggiunta di timeout nel caso non arrivi il messaggio di ACK
 		TCP - Transmission Control Protocol: offre servizi aggiuntivi rispetto a UDP
-			trasferimento affidabile dei dati (controllo di flusso, acknowledgment e timer)
-			controllo di gestione
+				trasferimento affidabile dei dati (controllo di flusso, acknowledgment e timer)
+				controllo di gestione
+			orientato alla connessione: comprende le fasi di instaurazione, utilizzo e chiusura delle connessioni
+				viene creata una connessione tra i due host prima del trasferimento di qualunque dato tra le applicazioni e chiusa dopo il completamento del strasferimento dati
+				fasi:
+					instaurazione
+					utilizzo
+					chiusura
+				il processo applicativo viene avvisato solo se:
+					non si riesce a stabilire la connessione
+					la connessione viene interrotta
+			orientato al flusso di dati (byte stream): considera il flusso di dati dall'host mittente fino al destinatario
+				la connessione viene trattata come un flusso continuo di byte
+					il processo applicativo mittente scrive byte
+					il livello TCP, per inviarli, accorpa i byte in un segmento TCP
+					il livello IP incapsula ogni segmento TCP in un datagram IP
+					il processo applicativo destinatario legge byte
+				l'unita di trasmissione è il byte
+			rispetto a UDP:
+				trasferimento con buffer: i dati sono inseriti in un buffer e popi inseriti in un pacchetto quando il buffer è pieno
+				connessioni full duplex
+					TCp puè effettuare trasferimenti contemporaneamente in entrambe le direzioni della connessione, nell'ambito della stessa sessione
+					ai processi applicativi questi appaiono come duie data stream non correlati
+					TCP consente di sovrapporre (piggybacking) comunicazioni di dati e comunicazioni di controllo, con l'invio di informazioni di controllo (es.: ACK) insieme ai dati utente
+			cosa TCP NON garantisce:
+				comunicazione in tempo reale
+					possibilità di ritardi molto lunghi nella rete
+						 è possibile che giungano pacchetti molto molto vecchi
+				garanzia di disponibilità banda tra mittente e destinatario
+				multicast affidabile
+			offre un livello di trasporto affidabile e orientato alla connessione su di un canale inaffidabile
+				ACK+timeout+(ritrasmissione)
+			permette la comunicazione tra host eterogenei
+				tempi di trasmissione eterogenei
+				possibilità di avere differenti capacità tra host e destinatario
+				possibilità di avere congestioni nelle reti intermedie
+					per queste ragioni TCP fa uso di BUFFER
+						nuove problematiche:
+							congestion control
+								gestione del tasso di trasmissione in base allo stato di congestione della rete
+							flow control
+								l'host mittente non deve sovraccaricare l'host destinatario
+			SEGMENTO TCP:
+				payload: dati del byte stream
+				header: informazioni di controllo per identificare i byte dati
+					source port: 16 bit
+					destination port: 16 bit
+					sequence number: 32 bit, numero di sequenza frelativo al flusso di byte che si sta trasmettendo
+					acknowledgement number: 32 bit, ACK relativo ad un numero di sequenza del flusso di byte che si sta ricevendo (poiché il flusso è bidirezionale vi è la possibilità di piggybacking)
+					header lenght: 4 bit, lunghezza dell'header TCP in multipli di 32 bit
+					reserved: 6 bit, per usi futuri
+					code bits: 6 bit, scopo e contenuto del segmento
+						URG: urgenti
+						ACK: valore del campo acknowledgement è valido
+						PSH: il destinatario deve passare i dati all'applicazione immediatamente
+						SYN (synchronize), FIN, RST (reset): usati per instaurare, chiudere e interropere la connessione
+					windows size: 16 bit, dimensione della finestra di ricezione (indica il numero di byte che si è disposti ad accettare in ricezione)
+					checksum: 16 bit, controllo integrtià dei dati trasportati nel segmento TCP (del tutto analogo a quello del protocollo UDP)
+					urgent pointer: 16 bit, puntatore al termine dei dati urgenti (es.: ˆC)
+					TCP options: campo opzionale di lunghezza variabile (serve a negoziare la dimensione del segmento massimo scambiato)
+						MSS: 	troppo piccolo -> overhead eccessivo dovuto agli header
+							troppo grande ->
+					zero padding: per header con lunghezza multipla di 32 bit (se opzioni)
+			
 
 				
 				
