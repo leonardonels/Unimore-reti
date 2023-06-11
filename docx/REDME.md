@@ -458,7 +458,12 @@
 							l'influenza dei campioni passati diminuisce esponenzialmente
 						timeout(t)=estimatedRTT(t)+4*Dev(t)
 						dove il margine di errore Dev(t)=(1-x)*Dev(t-1)+x*abs[sampleRTT(t)-estimatedRTT(t)]
-				
+		Sliding window
+			il mittente assegna a ciascun segmento un numero di sequenza (0-(2ˆ31-1))
+			ad ogni istante il mittente mantiene una finestra scorrevole sugli indici dei segmenti e solo quelli all'interno della finestra possono essere trasmessi (o sono stati spediti o sono da spedire)
+			la finestra utile del mittente è controllata dal destintario
+				per gestire la finestra scorrevole (sliding window) il mittente utilizza tre variabili:
+					dimensione della finestra di invio SWS SENDER window size
 						
 				
 				
