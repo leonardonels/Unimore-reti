@@ -558,11 +558,23 @@
 									in caso di errore la finestra massima assume il valore della finestra corrente, la finestra corrente si riduce al nuovo valore minimo
 									man mano che le finestre minime e massime si restringono la ricerca si fa meno aggressiva
 							Cubic
+								preserva la scalabilità di BIC
+								semplifica il controllo della finestra di congestione
+								migliora la fairness
+								aggiorna le finestre in tempo reale invece che basarsi su messaggi di ACK (non sensibile a RTT)
+								migliore capacità di decidere se essere aggressivo o meno
+								basato su BIC
+									stabilità: la finestra aumenta lentamente nei dintroni di Wmax
+									scalabilità: esegue un probing molto veloce lontano da Wmax
+									Fairness tra flussi: due flussi CUBIC che competono, convergono verso una dimensione della finestra "giusta"
+										la crescita della finestra dipende dal tempo e non dal RTT
+			Buffer bloating
+				la presenza di larghi buffer non determina la perdita di pacchetti anche in presenza di congestione
+				nuovi algoritmi di AQM (adaptive que management)
+					es.: google SPDY, HTTP/2
 				advertised window: dimensione della finestra massiama di ricezione comunicata dal destinatario
 				effective window: il mittente calcola la finestra che limita la massima quantità di dati che possono essere inviati (il mittente sa che ha già spedito dei segmenti)
-
-	
-	
+			
 	
 	
 	
