@@ -479,8 +479,28 @@
 							in caso di timeout viene trasmesso il segmento senza ACK e tutti i successivi
 							non serve buffer di ricezione, se lato destinazione non viene ricevuto un pacchetto tutti i successivi (ergo fuori ordine) vengono scartati
 						ritrasmissione selettiva
-
-				
+							il mittente ritrasmette solo i segmenti per i quali non ha ricevuto ACK entro il timeout
+							è necessario un buffer
+							mittente e destinatario gestiscono due finestre di sequenze di N segmenti consecutivi
+						attualmente TCP usa
+							ack cumulativi (ack per i primi N byte consecutivi) come Go-Back-N
+							i segmenti arrivati fuori ordine vengono salvati su di un buffer come nella trasmissione selettiva
+							mittente e destinatrio gestiscono due SW
+							il destinatario manda un ACK cumulativo relativo all'ultimo segmento ricevuto senza errori e in sequenza
+							il mittente trasmette solo i segmenti per il quali non ha ricevuto ACK entro il timeout
+							sia la SW del des che ls SW del mit possono avanzare di d posizioni (d>=1)
+				controllo di flusso:
+					a livello end-point
+						il mittente non deve saturare il buffer del destinatario
+						ACK contiene due informazioni:
+							quanti byte sono stati ricevuti dal destinatario
+							qaunti byte il destinatario può ancora ricevere (in quel momento)
+								il mittente regola la sua finestra in base alla disponibilità indicata dal destinatario
+								se il buffer si riempie completamente manda AdvertisedWindow=0 e ferma l'invio di dati del mittente fino a che non ha svuotato il buffer al 50%, in latrenativa se il buffer si riempie velocemnete il destinatrio ritarda linvio degli ACK						
+				controllo di congestione:
+					un numero elevato di sorgenti inviano contemporaneamente troppi dati generando un traffico che la rete (internet) non	
+				advertised window: dimensione della finestra massiama di ricezione comunicata dal destinatario
+				effective window: il mittente calcola la finestra che limita la massima quantità di dati che possono essere inviati (il mittente sa che ha già spedito dei segmenti)
 			
 	
 	
