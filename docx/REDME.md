@@ -498,10 +498,69 @@
 								il mittente regola la sua finestra in base alla disponibilità indicata dal destinatario
 								se il buffer si riempie completamente manda AdvertisedWindow=0 e ferma l'invio di dati del mittente fino a che non ha svuotato il buffer al 50%, in latrenativa se il buffer si riempie velocemnete il destinatrio ritarda linvio degli ACK						
 				controllo di congestione:
-					un numero elevato di sorgenti inviano contemporaneamente troppi dati generando un traffico che la rete (internet) non	
+					"un numero elevato di sorgenti inviano contemporaneamente troppi dati generando un traffico che la rete (internet) non è in grado di gestire"
+					effetti:
+						perdita di pacchetti
+						lunghi ritardi
+					controllo di gestion end-to-end
+						il livello di rete non fornisce un supprto esplicito al livello di trasport
+						la situazione di congestione è determinata analizzando le perdite di pachetti ed i ritardi nei nodi terminali
+						approccio utilizzato da tcp
+					controllo di gestione assistito dalla rete
+						i router forniscono un feedback esplicito ai nodi terminali riguardo lo stato do congestione nella rete
+						misura della congestione nei router: lunghezza della coda dei buffer
+						singolo bit che indica la congestione di un link
+						feedback diretto oppure aggiornando un campo del pacchetto che viaggia tra i nodi terminali
+					cosa usa TCP:
+						controllo di congestione end-to-end
+						slow start
+						AIMD: additive ingrease - multiplicative decrease
+							aumenta linearmente la windows size con gli ack arrivati entro il timeout e diminuisce per un fattore moltiplicativo in caso di perdita
+					tecniche per il controllo della congestione in TCP
+						congestion avoidance
+							stato stazionario (non di congestione)
+							stato di congestione: riduzione della dimensione della finestra
+						slow-start
+							dimensione di partenza pari a 1
+							incremento progressivo esponenziale
+							threshold: valore della dimensione della finestra raggiunto il quale la fase di incremento esponenziale termina e si raggiunge lo stato stazionario di incremento lienare
+							Tahoe
+								finito lo slow start, se la congestion window è superiore al valore di threshold e non vi è perdita, aumenta la congestion window e ripete, nel momento in cui avviene una perdita, imposta un nuovo valore di threshold pari alla metà della precedente congestion window e ricomicia da capo con congestion window settata a 1 e slow start
+							Reno
+								finito lo slow start, se la congestion window è superiore al valore di threshold aumenta la congestion window di uno per ogni ack ricevuto fino a che non avviene una perdita, se la perdita avviene per timeout reimposta la congestion window a 1 e riesegue uno slow start, altrimenti se avviene una perdita, ma cono arrivate 3 ack duplicati dimezza la congestion window
+							Vegas
+								approccio proattivo invece che reattivo
+								meccanismo di ritrasmissione per individuare più velocemente i pacchetti persi
+								gongestion avoidance basata su osservazione dei RTT
+									diminuzione lineare della frequenza di invio dei segmenti nel momento in cuisi osserva un continuo aumento del RTT
+								modifica del meccanismo slow start
+									se l'aumento di window size è maggiore dell'aumento del round trip time, aumenta la MSS (maximum segment size), altrimenti diminuisce la congestion window di 1/8
+								problema fairness:
+									vegas anticipa la congestione e riduce il trasmission rate
+									reno continua ad uamentare la congestion window
+				LFN: Long Fat Network
+					caratteristiche
+						alta banda passante: slow start può essere troppo lento per arrivare a convergenza in tempo utile
+						alta latenza: i ritardi possono interferire con la stima della finestra
+							Bic: binary increase congestion control
+								diverse fasi:
+									additive increase
+									binary search
+									max probing
+								mantiene quattro valori di finestra di congestione:
+									corrente
+									massimo
+									minimo
+									atteso(valore medio tra massimo e minimo)
+								usa tecniche di aggiustamento della finestra differenti in funzione della differenza tra finestra di congestione minima e massima
+									quando la differenza tra finestra minima e massima è grande si usa crescita aggressiva della finestra (incremento additivo)
+									quando la finestra corrente raggiunge quella attesa senza errori la finestra minima diventa quella attesa
+									in caso di errore la finestra massima assume il valore della finestra corrente, la finestra corrente si riduce al nuovo valore minimo
+									man mano che le finestre minime e massime si restringono la ricerca si fa meno aggressiva
+							Cubic
 				advertised window: dimensione della finestra massiama di ricezione comunicata dal destinatario
 				effective window: il mittente calcola la finestra che limita la massima quantità di dati che possono essere inviati (il mittente sa che ha già spedito dei segmenti)
-			
+
 	
 	
 	
