@@ -398,10 +398,40 @@
 					urgent pointer: 16 bit, puntatore al termine dei dati urgenti (es.: ˆC)
 					TCP options: campo opzionale di lunghezza variabile (serve a negoziare la dimensione del segmento massimo scambiato)
 						MSS: 	troppo piccolo -> overhead eccessivo dovuto agli header
-							troppo grande ->
+							troppo grande -> elevati rischi di frammentazione nell'aatraversamento dei livelli dello stack sottostanti
+							deafult -> 536 byte minimi, spesso usati 1450
+						l'ACK viene mandato a livello del segmento originale, quindi se un frammento viene perso, tutto il segmento deve essere riinviato
 					zero padding: per header con lunghezza multipla di 32 bit (se opzioni)
-			
-
+			instaurare e chiudere una connessione TCP
+				una connessione deve essere instaurata prima di poter trasmettere dati
+				modello client server
+					client inizia una connessione
+					server deve essere già attivo in attesa
+				inizializzazione delle variabili TCP
+					numeri di sequenza dei segmenti
+					informazioni necessarie per la gestione del buffer di trasmissione e ricezione
+				quando un client richiede una connessione, invia un segmento TCP speciale SYN segment al server
+					il segmento SYN del client include:
+						initial sequence number del client (ISN)
+							nell'intestazione del segmento è riportato solo il numero di sequnenza del primo byte dei dati contenuto nel segmento
+						ACK
+						maximum receive window (MRW) del client
+						maximum segment size (MSS)
+						NON HA PAYLOAD, solo TCP header
+					il client deve conoscere a chi spedire la richiesta, per cui nell'header del segmento deve specificare la porta del server
+				per accettare la connessione, il server deve essere già in attesa di ricevere connessioni
+				three-way handshaking:
+					client -> server SYN=1 seq=client_isn
+					server -> client SYN=1 seq=server_isn ACK=client_isn+1
+					client -> server SYN=0 seq=client_isn+1 ACK=server_isn+1
+					
+				chiusura (polite) della conessione:
+					client -> server FIN, seq=x
+					server -> client ACK, seq=x+1
+					server -> client FIN, seq=y
+					client -> server ACK, seq=y+1
+				
+						
 				
 				
 			
