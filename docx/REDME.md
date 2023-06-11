@@ -464,8 +464,22 @@
 			la finestra utile del mittente è controllata dal destintario
 				per gestire la finestra scorrevole (sliding window) il mittente utilizza tre variabili:
 					dimensione della finestra di invio SWS SENDER window size
-						
-				
+						indica il limite superiore per il numero di segmenti che il mittente pu inviare senza aver ricevuto ACK
+					numero di sequenza dell'ultima conferma ricevuta LAR (last ACK received)
+					numero di sequenza dell'ultimo segmento inviato LSS (last segment sent)
+					LSS-LAR<=SWS
+				per gestire la finestra scorrevole (sliding window) il destinatario utilizza tre variabili:
+					dimensione della finestra di ricezione RWS (RECEIVE windows size): indica il limite superiore per il numero di segmenti "fuori ordine" che il destinatario può accettare
+					numero di sequenza del segmento accettabile più elevato LAS (largest acceptable segment)
+					numero di sequenza dell'ultimo segmento ricevuto "in sequenza" LSR (last segment received)
+					LAS-LSR<=RWS
+				algoritmi per l'affidabilità del pipelining
+					vi sono due filosofie:
+						Go-Back-N
+							in caso di timeout viene trasmesso il segmento senza ACK e tutti i successivi
+							non serve buffer di ricezione, se lato destinazione non viene ricevuto un pacchetto tutti i successivi (ergo fuori ordine) vengono scartati
+						ritrasmissione selettiva
+
 				
 			
 	
