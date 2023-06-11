@@ -424,12 +424,40 @@
 					client -> server SYN=1 seq=client_isn
 					server -> client SYN=1 seq=server_isn ACK=client_isn+1
 					client -> server SYN=0 seq=client_isn+1 ACK=server_isn+1
-					
 				chiusura (polite) della conessione:
 					client -> server FIN, seq=x
 					server -> client ACK, seq=x+1
 					server -> client FIN, seq=y
 					client -> server ACK, seq=y+1
+					il client TCP attende per un tempo TIME_WAIT (es.: 30 secondi) prima di chiudere definitivamente la connesione per gestire situazioni anomale ed errori
+				chiusura (reset) della connessione:
+					{server -> client, client -> server} RST=1
+					l'altro chiude immediatamente la connessione
+			trasferimento di dati:
+				avviene in 3 fasi:
+					handshaking
+					trasmissione
+					chiusura della connessione
+			affidabilità del protocollo TCP
+				ACK, timeout, (ritrasmissione)
+				princpi:
+					ogni trasmissione andata a buon fine viene notificata dall'host ricevente
+					se l'host mittente non riceve ACK entro il timeout ritrasmette i dati
+				come stabilire il tempo di time out:
+					troppo breve e si effettuano troppe ritrasmissioni
+					troppo lungo e ha una reazione troppo lenta alla perdita di segmenti
+					deve essere MAGGIORE del RTT (round trip time)
+					inizialmente si sceglieva timeout = bet*RTTmedio ove beta=2
+					ora:
+						sampleRTT:
+							misura del tempo strascorso dalla trasmissione del segmento alla ricezione di ACK
+							ignora ritrasmissioni o ACK cumulativi
+							media pesata
+						estimatedRTT:
+							media pesata
+							l'influenza dei campioni passati diminuisce esponenzialmente
+						timeout(t)=estimatedRTT(t)+4*Dev(t)
+						dove il margine di errore Dev(t)=(1-x)*Dev(t-1)+x*abs[sampleRTT(t)-estimatedRTT(t)]
 				
 						
 				
