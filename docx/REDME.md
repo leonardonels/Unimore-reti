@@ -311,6 +311,34 @@
 						inbound load balancing: i router possono non cmunicare i loro MAC address per consentire una risposta selettiva qaundo più ruoter possono gestire lo stesso percorso (es.: round robin policy)
 				per aiutare la diffusione di ipv6 sono stati itrodotti i tunnel ip:
 					per connettre isole, aree, in cui è stato implemnato ipv6 al 100% si inseriscono i d iatagramma ipv6 nel payload di un datagramma ipv4
+	[4] TRASPORTO:	il livello trasporto estende il servizio di consegna con impegno proprio del protocollo IP tra due host terminali ad un servizio di consegna a due processi applicativi in esecuzione sugli host
+		il livello trasporto aggiunge:
+			multiplazione e demultiplazione messaggi tra processi
+				il protocollo IP non consegna dati tra processi applicativi in esecuzione sui nodi terminali (compito del protocollo trasporto)
+				ogni segmento dello strato di trasporto possiede un campo contenete l'informazione usata per determinare a quale processo deve essere conseganto il segmento.
+				la demultiplazione avviene dal lato del dedtinatario
+				multiplazione: creazione dei segmenti provenienti dal mesaggi di diversi processi applicativi, avviene dal lato del mittente
+			rilevamento dell'errore mediante checksum (non corregge)
+		udp e tcp attuano la multiplazione/demultiplazione includendo due campi speciali nell'header del segmento:
+			numero di porta del mittente: numero di 16 bit compreso tra 0 65535, numeri di porta tra 0 e 1023 sono noti e riservati per protocolli applicativi come http(80), telnet(23), smtp(25), dns(53), porte tra 1024 e 49151 sono porte registrate, NON DEVONO ESSERE USATE SENZA UNA PRECEDENTE AUTORIZZAZIONE
+			numero di porta del destinatario
+		UDP - User Datagram Protocol
+			è un protocollo di trasporto leggero, ovvero dotato delle funzionalità minime di trasporto
+			multiplazione e demultiplazione: aggiunta di porta al messaggio
+			controllo dell'errore: include nell'header un campo cheksum
+				serve la conoscenza dell'indirizzo IP del mittente e del destinatario
+				il processo mittente a livello UDP non può acquisire l'indirizzo IP del destinatario dall'applicazione di livello superiore
+				il processo mittente a livello UDP chiede al livello IP di costruire lo pseudo-header, calcolare il checksum UDP ed eiliminare lo psudo-header
+			servizio di consegna non garantito: best effort
+			servizio senza connessione: no handshaking, ogni segmento UDP è trattato in modo indipendente
+		affidabilità:
+			serve notificare al mittente la presenza di errori e la richeista di una ritrasmissione
+				messaggi di ACK e NAK
+			aggiunta dell'id del messaggio per evitare duplicati o ritrasmissioni non volute
+			aggiunta di timeout nel caso non arrivi il messaggio di ACK
+		TCP - Transmission Control Protocol: offre servizi aggiuntivi rispetto a UDP
+			trasferimento affidabile dei dati (controllo di flusso, acknowledgment e timer)
+			controllo di gestione
 
 				
 				
