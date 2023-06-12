@@ -910,6 +910,83 @@
 				migliorare la trasparenza nel mentre si accedono risorse molto eterogenee
 				separare il layer applicazione e il layer presentazione
 				delegare il calcolo della presentazione al client
+	[12]	SNMP - monitoraggio delle reti
+		Simple Network Management Protocol
+			gestione delle configurazioni
+				tenere traccia dei dispositivi in una rete e delle loro funzioni
+			gestione dei problemi
+				identificare problemi
+				predisporre soluzioni temporanee o definitive
+			gestione delle prestazioni
+				identificazione dei colli di bottiglia
+				capacity planning
+			necessaria interfaccia di gestione
+				standardizzata
+				estendibile
+				portatile
+			necessari meccanismi di gestione
+				poco costosi
+				che non richiedano hardware specifico
+			tre versioni pricipali:
+				SNMPv1: verisione standard
+				SNMPv2: 
+				SNMPv3: estensioni per consentire monitoraggio distribuito e supportare meccanismi di sicurezza aggiuntivi
+			gestione locale e remota
+			due ruoli:
+				agent: server che gira sui dispositivi da gestire
+					push: i server possono segnalare anomalie
+				manager: client che interpella gli agenti per raccogliere informazioni
+					pull client interroga i server
+			
+			usa porte:
+				161: snmp messages
+				162: snmp trap messages
+			SMI - Structure of Management Information
+				regole per la specifica del formato usato per definire gli oggetti cui accedere
+			MIB - Management Information Base
+				mappa gerarchica degli oggetti gestiti e a cui è possibile accedere
+			Nodi:
+				gestiti: ospitano un agent SNMP
+				gestori: ospitano un server SNMP
+				non gestiti: nodi che non supportano SNMP, ma che possono essere gestiti mediante proxy che gira su un altro nodo
+			i nodi possono essere di più di un tipo contemporaneamente
+			comunity: definiste per indicare i destinatari di un messaggio SNMP
+				gli agenti appartengono a una o più comunità
+				i manager ricevono tra da una o più comunità
+			tipi di agenti SNMP:
+				estensibili: aperti e modulari
+				monolitici: non estensibili, ottimizzati per una specifica piattaforma HW/SW
+			agenti proxy e gateway
+				consentono di estendere le operazioni di management verso
+					dispositivi che non supportano SNMP
+					agenti non SNMP
+					manager non SNMP
+					filtraggio SNMP
+					traduzione SNMPv1/SNMPv2/SNMPv3
+					aggregazione di più agenti/monitor
+			esempi di eventi che generano trap:
+				power failure, rottura disco, software failre, problema di rete
+			si può limitare il massimo rete di trap generate da un agente
+			ogni trap ha una priorità associata
+			operazioni SNMP:
+				Get: recupera un valore da una MIB in un agente remoto
+				GetNext: recupera valore successivo navigando dentro a una MIB
+				GetBulk: get di elementi multipli da una MIB
+				Set: imposta un valore in una variabile di una MIB
+				Trap: notifica asincrona da un agent a un manager
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	
