@@ -126,7 +126,7 @@
 	
 	#SSH
 		iptables -t filter -A INPUT -i eth0.10 -p tcp --dport ssh -s {IP H1} -m state --state NEW,ESTABLISHED -j ACCEPT
-		iptables -t filter -A OUTPUT -i eth0.10 -p tcp --sport ssh -d {IP H1} -m state --state ESTABLISHED -j ACCEPT
+		iptables -t filter -A OUTPUT -o eth0.10 -p tcp --sport ssh -d {IP H1} -m state --state ESTABLISHED -j ACCEPT
 
 	------------------------------------------------------------------
 	
