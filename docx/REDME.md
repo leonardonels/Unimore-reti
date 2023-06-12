@@ -732,10 +732,124 @@
 				UDP per il lookup di singoli o pochi nomi
 					se il lookup reply richiede più di 512 byte i richiedente risottomette la richiesta con TCP
 					
-	
-	
-	
-	
+	[10]	SMTP - Posta Elettronica
+			Local_username@Dmain
+				max 64 caratteri per username
+					teoricamente case sensitive, praticamente molti mail server scoraggiano o escludono questa possibilità
+				max 255 caratteri per il domain
+					non case sensitive
+			protocolli e agenti software utilizzati per la gestione della posta elettronica non prevedono meccanismi di autenticazione per gli indirizzi di posta elettronica del mittente
+			il campo mittente di un messaggio di posta elettronica NON deve essere considerato come una informazione affidabile
+			elementi fondamentali:
+				MTA: mail transfer agent, gestione e trasferimento della posta
+					può ricevere un messaggio da un MUA, un MSA (che a sua volte riceve da un MUA) o un altro MTA
+				SMTP: simple mail transfer protocol, il protocollo per il trasferimento della posta
+				DNS: risorsa di tipo MX
+				MUA: mail user agent, applicativo client per la gestione della posta lato utente
+			elementi aggiuntivi:
+				MDA: mail delivery agnet, prende i dati dal MTA e li consegna in una mailbox
+					al giorno d'oggi si occupa anche di:
+						filtering
+						ordinamento
+						inserimento in cartelle sulla base di keyword, soggetto, mittente, testo
+						invio di autoreply sulla base di eventi stabiliti dall'utente
+				MSA: mail submission agent, serve a inoltrare il messaggio al sistema di posta
+			tra MDA e MUA esiste uno strato software per rendere fruibile in remoto la mailbox mediante appositi server
+				POP3:
+					fasi:
+						instaurazione
+						autorizzazione
+						transazione
+						update (dopo quit)
+				IMAP:
+					più complesso di pop3
+					deve saper gestire una gerarchia di mailbox per ogni utente
+					permette all'utente di modificare la propria mailbox come se fosse locale
+					permette all'utente di ottenere alcune parti del messaggio (es.: scaricare un allegato)
+					fasi:
+						instaurazione
+						autorizzazione
+						transazione
+			Mail Server:
+				memorizzazione messaggi in arrivo nelle user mailbox
+				memorizzazione messaggi in uscita
+					temporanemanete nella coda in uscita
+					per un periodo di tempo più lungo nel caso il server di destinazione non sia raggiungibile o non in grado di ricevere messaggi
+				Invio/ricezione messaggi mediante il protocollo SMTP
+				MTA è sia client sia server di altri mail server
+			destinazioni
+				una macchina il cui nome è caratterizzato come mail exchange object
+				il nome della mailbox normalmente corrisponde ad uno username, ma puo corrispondere ad un alias
+				una mail può anche arrivare da un utente interno
+				una mail può essere inoltrata ad un'altra destinazione
+			interazioni DNS:
+				indica l'elenco di mail server (hostname, indirizzo IP) che possono ricevere l'email per quel dominio
+				priorità relativa
+				MTA mittente cerca di stabilire una connessione SMTP(lvl5)/TCP(lvl4) con il server con priorità più alta e continua fin quando non c'è un server dell'elenco che risponde
+				il messaggio viene inoltrato al primo che risponde
+				si parla di MX generico perché potrebbe riferirsi sia ad un MTA destinatario che un gateway intermedio (relay transfer)
+				nel caso di MTA multipli si dividono i compiti
+					SMTP server
+					MX server
+				si rende necessario fare uso di:
+					logging
+					spam detection
+					virtus detection
+					controllo dell'autorizzazione a insiemi di mittendi/destinatari
+			Protocollo SMTP:
+				client-server
+				usa TCP
+				fasi:
+					handshaking
+					trasferimetno messaggi
+					chiusura
+				usa connessioni TCP preesistenti per trasferire più messaggi in una sola volta dallo stesso MTA sender allo stesso MTA receiver
+				SMTP protocollo push (http protocollo pull)
+				SMTP parti multiple di un messaggio inviate nella stessa connessione tcp
+					http/1.0 oggetti multipli inviati in connessioni tcp separate
+					http/1.1 oggetti multipli inviati nella stessa connessione TCP
+				MIME:
+					trasmettere caratteri asci non solo a 7 bit
+					layer aggiuntivo tra interfaccia utente e mailer
+					tipologie di messaggio mime:
+						FTP: seguono i parametri per un comando ftp
+						...
+					sottotipi:
+						testo
+						viedo
+						immagini
+						applicazioni
+						audio
+					lo standard MIME è nato per essere espandibile
+				Limiti del sistema di posta elettronica
+					nessuan garanzia di confidenzailità, integrità, consegna del messaggio, autenticazione, non ripudio
+						trasferimento in chiaro
+							rivelazione di informazioni sensibili
+						storage di messaggi su nodi potenzialmente non sicuri
+						il contenuto delle mail può essere alterato
+						insicurezza sull'origine
+							diffusione si codice malevolo
+							possibili mail bombing e spam
+						i campi From non sono affidabili
+	[11]	HTTP
+			 tre nuovi standard:
+			 	URL: sistema di indirizzamento delle risorse
+					Uniform Resource Locator (URL): specifica la locazione fisica delle risorse e le modalità di accesso
+					schema://host.domain/pathname
+					sessioni utente: serie di richieste di risorse effettuate dallo stesso utente al medesimo sito web
+					richiesta di risorsa (o pagina): una singola richiesta effettuata dall'utente
+					Hit: una richiesta per un singolo oggetto effettuata dal client al server
+				HTML: linguaggio di markup ipertestuale
+					linee guida generali per la formattazione delle pagine
+				HTTP: protocollo per la richiesta delle risorse
+					meccanismi di comunicazione:
+						protocollo TCP/IP
+						sistema DNS
+					HyperText Transmission Protocol
+					protocollo che permette il reperiemtno delle risorse Web
+					protocollo applicativo di tipo request-reply basato su protocolli TCP/IP
+					tutti i client e server web devono supportare il protocollo http per poter scambiarerichieste e risposte
+			
 	
 	
 	
