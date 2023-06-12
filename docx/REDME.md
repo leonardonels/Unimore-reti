@@ -726,6 +726,12 @@
 				Resolvers
 					i primi client del sistema DNS che sottomettono query per informazioni su hostname e indirizzo IP per conto delle applicazioni internet	
 					ogni resolver deve conoscere il riferiemnto ad almeno un name server locale
+						la maggior parte dei sistemi linux/unix hanno il file /etc/resolv.conf che contiene informazioni sulla zona locale e gli indirizzi del/i name server per quella zona
+			nell'ambito del DNS si utilizzano sia UDP che TCP
+				TCP per il trasferiemnto di interi database da server primari a server secondari (replica)
+				UDP per il lookup di singoli o pochi nomi
+					se il lookup reply richiede più di 512 byte i richiedente risottomette la richiesta con TCP
+					
 	
 	
 	
