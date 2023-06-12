@@ -622,9 +622,110 @@
 					emulazione software
 				complessità del controller
 					controller ridondato/parallelizzato
-				
-	
-	
+	[7]	DNS - Domain Name System
+			un esempio di distema distribuito
+			modello client-server
+			dato lo scopo rivolto verso l'utente, all'hostname si preferisce attribuire valori mnemonici
+			permette l'uso di hostname (IP) dinamici
+			
+			componenti del DNS:
+				zone e name servers
+					ovvero i possessori e gestori dell'informazione con le funzionalità di server abilitati a rispondere alle query dei client e di altri server
+					realizza uno spazio dei nomi gerarchico e premtte la trdaduzione del nome mnemonico di un host in un idirizzo IP e viceversa
+						mediante multipli name server
+						server	distribuiti su scala geografica
+						deleghe multiple
+						uso di caching
+						uso di trasporto "veloce" UDP
+					TLD - top level domain
+						es.: .com .it
+					SLD - second level domain
+						corrispondono ai vari brand di un'organizzazione
+						i nomi hanno un valore economico perché sono associati con i beni/servizi prodotti e con la reputazione della organizzazione
+							es.: Amazon.com
+					obiettivi:
+						spazio dei nomi consisntente
+						sistema con elevata tolleranza ai guasti
+						sistema scalabile
+						sistema funzionante in reti eterogenee
+							ovvero i possessori e gestori dell'informazione con le funzionalità di server abilitati a rispondere alle query dei client e di altri server
+					calssi:
+						root
+							TLD
+								SLD
+									local name server
+					i root name server sono i computer che forniscono accesso al file della "root zone" per le necessarie operazioni di DNS resolution
+						a causa dei limiti del protocollo UDP itilizzato da DNS, il numero di macchine è limitato a 13, è possibile aggirare il problema con l'uso di anycast
+							nel momento in cui un pacchetto è diretto ad un indirizzo anycast, verrà recapitato ad uno qualsiasi degli indirizzi IP associati all'indirizzo
+							la risposta si ottiene dal primo host che viene raggiunto (tipicamente il più vicino). Vantaggi: 
+								si riduce il tempo di risposta
+								si distribuisce il carico tra più name server
+								si aumenta l'affidabilità
+					il file della root zone attualmente è gestiro dall'ente Network Solutions Incorporated of Herndon, Virginia USA ed è reso disponibile ai 12 root name server secondari dal server primario a.root-server.net
+					i cambiamenti, gestiti da ICANN, sono effettuati uno, due volte a settimana	
+					il file della "root zone" è trasmesso ai root name server
+						data la dimensione relativamente piccola del file della "root zone", la maggior parte degli aggiornamenti sono proagati mediante DNS zone transfers
+					ciascuna organizzazione che possiede e gestisce un nome a dominio ("contratto diretto") è responsabile dell'operatività di almeno un authoritative name server che:
+						deve essere registrato presso il dominio gerarchicamente superiore
+						deve fornire la corrispondenza tra tutti gli hostanme del dominio ed i rispettivi indirizzi IP
+					i name server non hanno i dati di tutti i nomi
+					i name server devono conoscere quali altri server sono responsabili di altre zone
+						in generale ciascun name server deve conoscere almeno il anme server della zona immediatamente superiore e viceversa
+						tuttavia ciascun amministratore di una zona può inserire tra i proprio dati anche altri name server
+						ne consegue che la gerarchia di name server risulta più irregolare rispetto alla gerarchia dei nomi di dominio
+							ogni singolo livello della gerarchia può essere partizionato tra server multipli
+							un singolo server può servire più zone
+							forte dipendenza dalle scelte degli amministratori di zona per la configurazione del relativo name server
+					esistono due tipi di name server che possono fornire dati autoritativi
+						primary o master server, che leggono i dati di una zona diretta del master server
+						secondary server, che scaricano i dati di una zona dal rispettivo server primario
+					local name server
+						quello che viene configurato automaticamente o manualmente dal client
+						possibilità:
+							SO-HO (small office - home office) senza dominio
+							dominio con contratto indiretto
+							dominio con contratto diretto
+								1 zona
+								più zone
+					ogni serve può fare caching anche per alri server, queste risoluzioni non sono considerate autoritative
+					quando un server non autoritativo ottiene un dato da un server autoritativo prende nota del TTL associato
+					il name server fornirà un dato nella cache al client che ne fa richiesta solo se il relativo TTL non è scaduto
+					se invece il TTL è scaduto, il name server contatta il name server autoritativo per controllare se il dato è valido o meno
+				Domain Name Space e Resource Records
+					dati su zone, descrittoti, informazioni
+						dati relativi a tutti i nomi di un dominio, meno alcuni sottodomini amministrati da autorità di livello inferiore
+						hostaname ed indirizzi IP del o dei name server cje forniscono dati autoritativi per la zona e sotto-zone delegate
+						parametri relativi alle modalità di gestione della zona
+					ciascun RR contiene:
+						nome del dominio (simbolico)
+						ttl del rr espresso in secondi
+						classe del RR
+						tipo del RR
+						valore del RR (indirizzo IP numerico)
+					tipo di Resource Records:
+						SOA: start of authority, parametri per la gestione della zona
+							ttl
+							serial: identificativo seriale di aggiornamento
+							refresh: indica ad un server secondario la frequenza con cui deve chiedere un refresh
+							Expire: tempo limite che indica per quanto un file di zona può essere servito
+							retry: se il server secondario richiede un refresh ed il primario è irraggiungibile, il valore di retry indica quanto tempo attendere prima di provare nuovamnte
+						NS: name server autoritativo per la zona
+							specifica i server che contengono i dati autoritatuvi relativi ad una zona
+							in particolare indica il server primario e le informazioni sui server secondari che vengono usatinel caso in cui il primario è irraggiungibile
+						A: Host address (IP)
+						MX: Mail eXchanger
+							unico record che permette di specificare una priorità, specifica a quale server inviare una mail in arrivo, è possibile spedcificare fino a 128 server, ciascuno con una priorità differente, la priorità più comune è pari a 10
+						CNAME: canonical Name per un alias, un host può avere più hostname di cui uno canonico ed altri alias
+							tipicamente usato per unificare i record e limitare le modifiche da effettuare quando un indirizzo ip cambia
+							un cname agisce sia come mx che come A
+							deve contenere un alias di un record A già esistente, non può contenere un indirizzo IP
+						PTR: PoinTeR to another noode
+						HINFO: host information
+						TXT: arbitrary TeXT
+						AAAA: ipv6 address
+				Resolvers
+					i primi client del sistema DNS che sottomettono query per informazioni su hostname e indirizzo IP per conto delle applicazioni internet	
+					ogni resolver deve conoscere il riferiemnto ad almeno un name server locale
 	
 	
 	
