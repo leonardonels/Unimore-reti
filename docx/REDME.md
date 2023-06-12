@@ -15,6 +15,62 @@
 			SDU: Service Data Unit - informazione
 			PDU: Protocol Data Unit (PCI+SDU)
 			
+	[9] INTRODUZIONE A PROTOCOLLI SICURI
+		schemi criptografici possono proteggere i dati su canali non sicuri
+		primitive crittografiche sono strumenti matematici
+		protoclli crittografici sono protocolli di comunicazione orientati alla sicurezza
+		principio di Kerckhof
+			gli algoritmi sono pubblici
+			la sicurezza si basa sulla segretezza della chiave
+			un codice cifrato deve essere praticamente, se non matematicamente indecifrabile
+		schemi di cifratura moderna
+			la chiave è abbastanza grande da impedire Brute Force
+			lo schema deve prevenire la criptoanalisi del messaggio cifrato
+		criptazione simmetrica:
+			One Time Pad
+				messaggio cifrato mediante xor con una password temporanea
+				password comune a mittente e destinatario
+				tecnicamente la sicurezza perfetta
+				la chiave deve essere per forza di cose più grande del messaggio
+				più grande limite, la condivisione di tale password deve avvenire tramite canali sicuri
+			sicurezza computazionale
+				gli schemi di cifratura DEVONO essere PRATICI
+					la chiave deve essere breve
+				tecnicamente è possibile fare Brute Force
+				fortunatamente la difficoltà della cifratura scala linearmente con la lunghezza del messaggio mentre la difficoltà di Brute Force aumeta esponenzialmente
+				nel caso di chiavi simmetriche una chiave a 128 bit da una sicurezza di circa 128 bit
+				nel caso di chiavu asimmetriche una chiave a 1024 bit da una sicurezza di circa 80 bit, 2048 di circa 112 bit
+			in parallelo vengono usati protocolli per garantire l'integrtià del messaggio	
+				Parity, CRC, Checksum
+			MAC: message authentication code
+				una funzione che prende in ingresso la chiave ed il messaggio e produce un tag
+				il destinatario può così verificare che la chiave ed il messaggio sono stati usati dal mittente corretto
+			 è però possibile che un attaccante prenda il messaggio è lo spedisca più volte per sottoporre più volte la stessa richiesta al destinatario
+			 	tramite scelte di design fatte a livelli più alti un codice identificativo del messeggio può permettere al destinatario di capire se il messaggio è genuinamente nuovo
+		criptazione asimmetrica
+			mittente e destinatario usano due chiavi differenti
+			utilizzi comuni:
+				two-party key exchange
+				firme digitali
+				scambio di chiavi di autenticazione
+			il funzionamento generale è molto semplice
+				il destinatario genera una proprio chiave privata che non condivide con nessuno
+				oltre ad una chiave privata produce anche una chiave pubblica che può condividere, un messaggio qualsiasi criptato con questa chiave pubblica può però essere decriptata solo tramite l'uso della chiave privata non condivisa con nessuno
+				il destinatario condivide al mittente la chiave pubblica, chiave che il mittente usa per criptare il messaggio prima di spedirlo al destinatario
+			esempio: firma digitale
+				la firma avviene tramite la chiave privata, chiave che non deve essere condivisa
+				una chiave pubblica può però verificarne la sua veridicità
+			generalmente la cifratura asimmetrica è più lenta di quella simmetrica
+			infrastruttura di chiavi pubbliche:
+				la chiave pubblica è basata su certificati (documenti digitalmente firmati)
+				quando ad esempio un utente prova a connettersi ad un sito, l'utente non ha chiavi di nessun tipo riguardanti il suddetto sito, al contrario il sito le ha entrambe
+					l'utente verifia l'identità del sito
+					il sito sua crittografia per autenticare il client
+				per verifica l'identità di un sito (web server) si chiama in ballo la terza parte di fiducia: un server autoritativo
+					un server autoritativo rilascia certificati che legano la chiave pubblica a entità
+						approccio  gerarchico: catena di server autoritativi
+							il suddetto sito è certificato da server autoritativi intermedi che risalendo la catena sono certificati da un serve di fiducia di Root (almeno di uno bisogna fidarsi)
+				
 	[0] STANDARD	ISO/OSI:
 				ISO: International Standard Organization
 				OSI: Open System Interconnection
