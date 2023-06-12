@@ -574,8 +574,55 @@
 					es.: google SPDY, HTTP/2
 				advertised window: dimensione della finestra massiama di ricezione comunicata dal destinatario
 				effective window: il mittente calcola la finestra che limita la massima quantità di dati che possono essere inviati (il mittente sa che ha già spedito dei segmenti)
-			
-	
+	[6]	SDN - Software Defined Networks
+			tipica struttura della rete di un data centre
+				edge/access layer: connette gli host
+				aggregation layer: connette le zone del data centre
+				core layer: backbone del data centre, connette con l'esterno, fondamentale per carantire i serivizi
+			funzioni sdn
+				basso livello: data plane
+					veloce
+					distribuito
+				alto livello: control plane
+					centralizzato
+					flessibile
+					supporta policy complesse
+			data plane:
+				inoltro basato su tabelle di routing, opera su mumerosi campi
+				supporto per deep packet inspection
+					considera campi diversi dello stack
+				grande flessibilità: metch esatti, ma anche di tipo range/prefix
+				possibili problemi di prestazioni
+					dimensione delle tabelle
+				l'emulazione software danneggia le prestazioni
+				azioni supportate
+					inoltro
+					drop
+					modifica di pacchetto
+						gestione vlan
+						implementazione di nat
+						load balancing
+						transparent proxy
+					invio al controller
+					metering&shaping
+						aggiornamento contatori
+						pacchetti riordinati per non eccedere traffic rate e garamtire QoS
+					...
+						gestire gerarchie delle tabelle
+				southbound interface: tra data plane e control plane
+			control plane:
+				northbound interface: tra control plane e applicazioni
+					solitamente con API rest (representational state transfer)
+						basata su http
+					consente di integrare la gestione della rete nelle altre logiche di gestione di un data centre
+					visione globale della rete
+			Sfide Aperte:
+				problemi prestazionali nelle interazioni con il controller
+				problemi prestazionali nel dataplane
+					emulazione software
+				complessità del controller
+					controller ridondato/parallelizzato
+				
 	
 	
 	
