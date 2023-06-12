@@ -101,8 +101,8 @@
 		iptables -t filter -A OUTPUT -o eth0(interfaccia ingresso verso il client) -p udp --sport 67 --dport 68 -j ACCEPT
 		
 		#se firewall fa da dhcp relay e non dhcp server, dhcp server in un'altra lan
-		iptables -t filter -A OUTPUT -o eth1(interfaccia verso il dhcp server) -p udp -s 155.185.1.6 --sport 67 -d 192.168.1.253 --dport 67 -m state --state NEW,ESTABLISHED -j ACCEPT
-		iptables -t filter -A INPUT -i eth1(interfaccia verso il dhcp server) -p udp -s 192.168.1.253 --sport 67 -d 155.185.1.6 --dport 67 -m state --state ESTABLISHED -j ACCEPT
+		iptables -t filter -A OUTPUT -o eth1(interfaccia verso il dhcp server) -p udp -s 155.185.1.6(indirizzo firewall-dhcp relay) --sport 67 -d 192.168.1.253(indirizzo dhcp server) --dport 67 -m state --state NEW,ESTABLISHED -j ACCEPT
+		iptables -t filter -A INPUT -i eth1(interfaccia verso il dhcp server) -p udp -s 192.168.1.253(indirizzo dhcp server) --sport 67 -d 155.185.1.6(indirizzo firewall-dhcp relay) --dport 67 -m state --state ESTABLISHED -j ACCEPT
 	
 	#DNS LAN
 		iptables -t filter -A INPUT -i eth0(interfaccia ingresso verso il client) -p udp --dport 53 -j ACCEPT
