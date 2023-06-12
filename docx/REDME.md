@@ -848,9 +848,68 @@
 					HyperText Transmission Protocol
 					protocollo che permette il reperiemtno delle risorse Web
 					protocollo applicativo di tipo request-reply basato su protocolli TCP/IP
-					tutti i client e server web devono supportare il protocollo http per poter scambiarerichieste e risposte
-			
-	
+					tutti i client e server web devono supportare il protocollo http per poter scambiare richieste e risposte
+					http è un protocollo stateless
+				una richiesta http comrpende:
+					metodo: spedcifica il tipo di operazione che il client richiede
+					URL: identificatore dell óggetto richiesto
+					identificativo della versione del protocollo http
+					insieme di extension header: contiene informazioni addizionali tipo data ora o il software usato dall'utente
+				una risposta http comprende:
+					contenuto della risorsa richiesta
+					header
+						identificativo della versione del protocollo http
+						codice di stato
+						possibili altre informazioni
+				se la richiesta, oltre al testo html, contiene altri oggetti, ciascuno di essi sarà identificato da un url differente, per cui è necessario che il browser invii un esplicito messaggio di richiesta per ognuno degli elementi collegati alla pagina
+				codici di stato:
+					1xx: informazioni
+					2xx: successo
+					3xx: redirezione
+					4xx: errore del client
+					5xx: errore del server
+				veriosni di http:
+					0.9: prevedeva solo GET
+					1.0:
+						previsti: GET, HEAD, POST
+						metodi aggiuntivi: PUT, DELETE, LINK, UNLINK
+						connessioni non persistenti
+						1 richiesta http -> 1 connessione tcp
+					1.1:
+						rimozione dei metodi LINK e UNLINK
+						connessioni persistenti per default
+						tante richieste in 1 connsessione TCP
+				gestione richieste event driven
+					un solo processo
+					un solo thread (o un thread per ogni core)
+					ogni azione necessaria al servizio della ricchiesta è definita come una funzione
+						meccanismo che associa eventi a funzioni
+						uso di puntatori
+						completare l'esecuzione di una funzione è a sua volta un evento
+					event driven è sistema che garantisce le massime prestazioni
+						nessun overhead per context switch
+						nessun overhead per passaggio dati
+					usato in:
+						apache
+						nginx
+						node.js
+				richieste condizionali
+					caching delle risorse sul disco del client
+					validazione della cache
+					metadati delle risorse (data download, ETag - ID versione)
+					richiesta di una risorsa: GET + header condizionali
+				cookie:
+					il serve invia un coockie al client
+					per richieste successive il client presenta il cookie
+					il server usa il cookie
+						identifica il client
+						ricostruisce la sessione per seguire le preferenza e la navigazione degli utenti
+					l'utente può cancellare i cookie
+			WEB dinamico:
+				personalizzazione in base all'utente o altre condizioni interne al web e non
+				migliorare la trasparenza nel mentre si accedono risorse molto eterogenee
+				separare il layer applicazione e il layer presentazione
+				delegare il calcolo della presentazione al client
 	
 	
 	
