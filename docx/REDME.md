@@ -1030,8 +1030,26 @@
 				GetBulk: get di elementi multipli da una MIB
 				Set: imposta un valore in una variabile di una MIB
 				Trap: notifica asincrona da un agent a un manager
-	
-	
+	[#] seminario
+		TCP: sappiamo che CUBIC è più efficacio nel "danzare" attorno al limite della rete rispetto a RENO
+			però satura i buffer come fanno tutti gli algorittmi loss-based
+		TCP: BBR (Bottleneck Bandwidth RTT)
+			designe by google
+			testa a intermittenza la capacità aumentando per un breve lasso di tempo la sending rate
+				se il RTT non aumenta, allora ha ancora spazio di manovra
+				se il RTT aumenta probabilmente è vicino all'incrementare le code, principio di saturazione
+			#tastareilterreno
+			durante questi test non reagisce alla conseguente perdita di pacchetti (nel caso di fallimento)
+			fasi:
+				warm-up: simile al classico slow-start
+					start-up: ricerca esponenziale della banda
+					drain: svuotamento delle code causato dallo start-up
+				steady-state: dove BBR passa la maggior parte del tempo
+					probe_BW: esplora la massima banda disponibile
+					probe_RTT: svuota le code per verificare il minimo RTT con la banda data
+
+					
+				
 	
 	
 	
