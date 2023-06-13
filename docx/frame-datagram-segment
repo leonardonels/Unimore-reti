@@ -29,4 +29,25 @@
 	
 #segment
 	segment UDP
-	segment TCP
+	header TCP
+		informazioni di controllo per identificare i byte dati
+		source port: 16 bit
+		destination port: 16 bit
+		sequence number: 32 bit, numero di sequenza frelativo al flusso di byte che si sta trasmettendo
+		acknowledgement number: 32 bit, ACK relativo ad un numero di sequenza del flusso di byte che si sta ricevendo (poiché il flusso è bidirezionale vi è la possibilità di piggybacking)
+		header lenght: 4 bit, lunghezza dell'header TCP in multipli di 32 bit
+		reserved: 6 bit, per usi futuri
+		code bits: 6 bit, scopo e contenuto del segmento
+					URG: urgenti
+					ACK: valore del campo acknowledgement è valido
+					PSH: il destinatario deve passare i dati all'applicazione immediatamente
+					SYN (synchronize), FIN, RST (reset): usati per instaurare, chiudere e interropere la connessione
+		windows size: 16 bit, dimensione della finestra di ricezione (indica il numero di byte che si è disposti ad accettare in ricezione)
+		checksum: 16 bit, controllo integrtià dei dati trasportati nel segmento TCP (del tutto analogo a quello del protocollo UDP)
+		urgent pointer: 16 bit, puntatore al termine dei dati urgenti (es.: ˆC)
+		TCP options: campo opzionale di lunghezza variabile (serve a negoziare la dimensione del segmento massimo scambiato)
+					MSS: 	troppo piccolo -> overhead eccessivo dovuto agli header
+						troppo grande -> elevati rischi di frammentazione nell'aatraversamento dei livelli dello stack sottostanti
+						deafult -> 536 byte minimi, spesso usati 1450
+					l'ACK viene mandato a livello del segmento originale, quindi se un frammento viene perso, tutto il segmento deve essere riinviato
+		zero padding: per header con lunghezza multipla di 32 bit (se opzioni)
