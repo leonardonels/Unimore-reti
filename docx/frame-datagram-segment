@@ -28,7 +28,11 @@
 	tipo e informzioni di autenticazione
 	
 #segment
-	segment UDP
+	header UDP
+		destination port
+		source port
+		lenght
+		checksum
 	header TCP
 		informazioni di controllo per identificare i byte dati
 		source port: 16 bit
