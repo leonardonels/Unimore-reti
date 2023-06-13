@@ -6,7 +6,7 @@
 	data
 	CRC - ciclic redoundance check (controllo ciclico di ridondanza)
 
-#datagram
+#datagram IP
 	version
 	haeder lenght - numero di parole a 32 bit
 	service type
@@ -20,6 +20,12 @@
 	IP destinazione
 	IP options
 	padding
+	
+#datagram OSPF
+	versione
+	tipo
+	checksum
+	tipo e informzioni di autenticazione
 	
 #segment
 	segment UDP
