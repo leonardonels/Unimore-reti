@@ -1,0 +1,9 @@
+#frame ethernet
+	frame
+
+#datagram
+	datagram IP
+
+#segment
+	segment UDP
+	segment TCP
