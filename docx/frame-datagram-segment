@@ -1,9 +1,26 @@
 #frame ethernet
-	frame
+	preambolo
+	indirizzo destinatario
+	indirizzo sorgente
+	type
+	data
+	CRC - ciclic redoundance check (controllo ciclico di ridondanza)
 
 #datagram
-	datagram IP
-
+	version
+	haeder lenght - numero di parole a 32 bit
+	service type
+	total lenght
+	identification
+	flags - 0, DF, MF
+	fragment offset - posizione del frammento nel messaggio
+	ttl
+	protocol header checksum
+	IP sorgente
+	IP destinazione
+	IP options
+	padding
+	
 #segment
 	segment UDP
 	segment TCP
