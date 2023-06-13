@@ -132,7 +132,8 @@
 	
 	#REGOLE DI NAT [10.0.1.129 corrisponde al server nella dmz]
 		iptables -t nat -A POSTROUTING -p tcp --dport www -s (netid da mascherare) -o eth1 -j MASQUERADE
-		iptables -t nat -A PREROUTING -i eth1 -p tcp --dport www -j DNAT --to-destination 10.0.1.129
+		iptables -t nat -A PREROUTING -i eth1 -p tcp --dport -d (IP del firewall in ingresso) www -j DNAT --to-destination (IP del server dopo l'uscita del firewall)
+		#per testare dnat server fare netcat al server al posto che al server di destinazione come port forwarding
 
 	------------------------------------------------------------------
 		
