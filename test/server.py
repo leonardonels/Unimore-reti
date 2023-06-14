@@ -21,6 +21,12 @@ def rot13(x):
         alpha="abcdefghijklmnopqrstuvwxyz"
         return "".join(alpha[(alpha.find(c)+13)%26] for c in x)
 
+def upper_case(x):
+        return x.upper()
+
+def lower_case(x):
+        return x.lower()
+
 def serve_request(conn):
 	# receive request from client
 	request = conn.recv(1024).decode('ascii')
@@ -49,7 +55,7 @@ def serve_request(conn):
 		conn.sendall(msg.encode('ascii'))
 		# process request
 
-		reply = rot13(request)
+		reply = upper_case(request)
 
                 # send reply
 		conn.sendall(reply.encode('ascii'))
