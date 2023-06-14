@@ -104,7 +104,7 @@ int main (int argc, char *argv[]) {
 
 			char reply[256]="token from client: ";
 
-			for(int i = 15; i < 250;i++){
+			for(int i = 16; i < 250;i++){
 				if(buffer[i]=='\0') break;
 				reply[i+2]=toupper(buffer[i]);
 			}
