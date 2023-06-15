@@ -83,6 +83,9 @@
 		tc class add dev eth0 parent 1: classid 1:1 htb rate 100Mbit burst 15k
 		tc class add dev eth0 parent 1:1 classid 1:10 htb rate 1Mbit burst 15k
 		tc class add dev eth0 parent 1:1 classid 1:20 htb rate 20Mbit ceil 50Mbit burst 15k
+		tc qdisc add dev eth0 parent 1:10 handle 10: pfifo limit 50
+		tc qdisc add dev eth0 parent 1:20 handle 20: pfifo limit 50
+		tc filter add dev eth0 protocol ip parent 1:0 prio 1 u32 match ip dst 10.0.1.129{ip da rallentare} flowid 1:10
 	
 	#strumento di test
 		dd if=/dev/zero bs=10M count=1 | nc <netcat server> <netcat port>
