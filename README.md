@@ -79,7 +79,7 @@
 	#Ext deve limitare il traffico in uscita (ad esempio file disponibili su Ext e scaricati da qualunque altra macchina) a una bandwidth massima di 10MBit/s.
 		post-up tc qdisc add dev eth0 root tbf rate 10Mbit latency 50ms burst 1539		#traffic shaping stateless
 		
-		tc qdisc add dev eth0 root handle 1: htb default 20
+		tc qdisc add dev eth0 root handle 1: htb default 20					#traffic shaping statefull
 		tc class add dev eth0 parent 1: classid 1:1 htb rate 100Mbit burst 15k
 		tc class add dev eth0 parent 1:1 classid 1:10 htb rate 1Mbit burst 15k
 		tc class add dev eth0 parent 1:1 classid 1:20 htb rate 20Mbit ceil 50Mbit burst 15k
