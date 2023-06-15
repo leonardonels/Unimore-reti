@@ -6,11 +6,33 @@ import time
 import os
 import re
 import json
+import ipaddress
 
 # Standard loopback interface address (localhost)
 HOST = '127.0.0.1'
 # Port to listen on (non-privileged ports are > 1023)
 PORT = 8080
+
+def verifica_coerenza(indirizzo_ipv4, netmask):
+    try:
+        # Converte l'indirizzo IP e la netmask in un oggetto IPv4Interface
+        interfaccia = ipaddress.IPv4Interface(f"{indirizzo_ipv4}/{netmask}")
+        
+        # Verifica se l'indirizzo di rete corrisponde all'indirizzo IP fornito
+        return str(interfaccia.network.network_address) == indirizzo_ipv4
+    except ValueError:
+        return False
+
+
+def calcola_indirizzi_sottorete(indirizzo_ipv4, netmask):
+        # Crea un oggetto di tipo IPv4Network utilizzando l'indirizzo IPv4 e la netmask
+        rete = ipaddress.IPv4Network(f"{indirizzo_ipv4}/{netmask}", strict=False)
+    
+        # Ottieni l'indirizzo IP minimo e massimo della sottorete
+        indirizzo_minimo = rete.network_address + 1
+        indirizzo_massimo = rete.broadcast_address - 1
+    
+        return str(indirizzo_minimo), str(indirizzo_massimo)
 
 def serve_request(conn):
 	# receive request from client
@@ -18,47 +40,50 @@ def serve_request(conn):
 	# print for debug	
 	print(request_json)
 
-	# filename file to be found
+	#
 	request = json.loads(request_json)
-	filename = request["filename"]
+	ip = request["netid"]
+	netmask = request["netmaskCIDR"]
+	#print(ip)
+	#print(netmask)
 
-	# find client file in directory files
-	files = os.listdir('files')
-	found = False
-	for f in files:
-		if filename == f:
-			found = True
-			break
+	#
+	b=verifica_coerenza(ip, netmask)
 
 	# control
-	if not found:
+	if not b:
 		# file not found
-		conn.sendall(f'ERR: File {filename} not found\r\n'.encode('ascii'))
+		reply = {"status": "ERROR"}
+		reply_json = json.dumps(reply)
+		conn.sendall(reply_json.encode('ascii'))
 	else:
 		# file found
-		conn.sendall(f'OK: File {filename} found, sending information...\r\n'.encode('ascii'))
+		#conn.sendall(f'OK: File {filename} found, sending information...\r\n'.encode('ascii'))
 
 		# process request
-		filesize = os.stat(f'files/{filename}').st_size	# return size in Bytes
-		reply = {"filename": filename, "filesize": str(filesize)}
+		#filesize = os.stat(f'files/{filename}').st_size	# return size in Bytes
+
+		indirizzo_min, indirizzo_max = calcola_indirizzi_sottorete(ip, netmask)
+
+		reply = {"status": "OK", "IPmin": indirizzo_min, "IPmax": indirizzo_max}
 		reply_json = json.dumps(reply)
 
 		# send reply
-		time.sleep(0.5)
+		#time.sleep(0.5)
 		conn.sendall(reply_json.encode('ascii'))
-		conn.sendall(f'\n<{filesize} bytes of file content>'.encode('ascii'))
+		#conn.sendall(f'\n<{filesize} bytes of file content>'.encode('ascii'))
 
 		# opening file found and reading content
-		f = open(f'files/{filename}', "r")
-		content = f.read()
-		f.close()
+		#f = open(f'files/{filename}', "r")
+		#content = f.read()
+		#f.close()
 
 		# send content to client
-		time.sleep(1)
-		conn.sendall(content.encode('ascii'))
+		#time.sleep(1)
+		#conn.sendall(content.encode('ascii'))
 
 		# sleep for 1 second to wait the client to close the socket
-		time.sleep(1)
+		#time.sleep(1)
 		conn.close()
 
 """

@@ -4,6 +4,7 @@ import socket
 import sys
 import time
 import json
+import re
 
 # Standard loopback interface address (localhost)
 HOST = '127.0.0.1'
@@ -16,33 +17,24 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
 	s.connect((HOST, PORT))
 
 	# asking user for filename
-	filename = input('Enter filename you want download: ')
+	request = input('inserisci un prefisso di rete con netmask in formato CIDR: ')
 	
 	# request to server
-	request = {"filename": filename}
-	request_json = json.dumps(request)
-	s.sendall(request_json.encode('ascii'))
 
-	# msg from server
-	msg = s.recv(1024).decode('ascii')
-	print(msg)
-
-	# control msg
-	if msg.split(' ')[0] == 'OK:':
-		# reply from server
-		time.sleep(1)
-		reply_json = s.recv(1024).decode('ascii')
-		# print for debug
-		print(reply_json)
-
-		# content from server
-		content = s.recv(1024).decode('ascii')
-
-		# create new file filename and write content in it
-		f = open(filename, "w")
-		f.write(content)
-		f.close()
+	m = re.match(r'^([0-9]+.[0-9]+.[0-9]+.[0-9]+)/([0-9]+)$', request)
+	if m:
+                ip=m.group(1)
+                netmask=m.group(2)
+                request = {"netid": ip,"netmaskCIDR":netmask}
+                request_json = json.dumps(request)
+                s.sendall(request_json.encode('ascii'))
+                reply_json = s.recv(1024).decode('ascii')
+                print(reply_json)
 
 	# close socket
+	else:
+                print("-ERR")
+
+
 	s.close()
 
