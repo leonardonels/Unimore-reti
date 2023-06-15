@@ -73,9 +73,16 @@
 		sysctl -p /etc/sysctl.conf	
 		
 	------------------------------------------------------------------
+	#eliminare la regola di tc corrente
+		tc qdisc del root dev eth0
 	
 	#Ext deve limitare il traffico in uscita (ad esempio file disponibili su Ext e scaricati da qualunque altra macchina) a una bandwidth massima di 10MBit/s.
-		post-up tc qdisc add dev eth0 root tbf rate 10Mbit latency 50ms burst 1539		#traffic shaping
+		post-up tc qdisc add dev eth0 root tbf rate 10Mbit latency 50ms burst 1539		#traffic shaping stateless
+		
+		tc qdisc add dev eth0 root handle 1: htb default 20
+		tc class add dev eth0 parent 1: classid 1:1 htb rate 100Mbit burst 15k
+		tc class add dev eth0 parent 1:1 classid 1:10 htb rate 1Mbit burst 15k
+		tc class add dev eth0 parent 1:1 classid 1:20 htb rate 20Mbit ceil 50Mbit burst 15k
 	
 	#strumento di test
 		dd if=/dev/zero bs=10M count=1 | nc <netcat server> <netcat port>
@@ -83,6 +90,10 @@
 	------------------------------------------------------------------
 	
 	#iptables
+	#elenco di regole
+		iptables -t filter -L -n -v
+	
+	#blocco di tutto il traffico
 		iptables -t filter -P INPUT DROP
 		iptables -t filter -P OUTPUT DROP
 		iptables -t filter -P FORWARD DROP
@@ -114,7 +125,7 @@
 	
 	#PERMETTERE AL SERVER WEB TRAFFICO SULLA PORTA 80 WWW HTTP
 		iptables -t filter -A FORWARD -p tcp --dport http -i eth0(interfaccia ingresso verso il client) -o eth0(interfaccia in uscita verso il web server) -d 192.168.200.1 -m state --state NEW,ESTABLISHED -j ACCEPT
-		iptables -t filter -A FORWARD -p tcp --sport http -0 eth0(interfaccia ingresso verso il client) -i eth0(interfaccia in uscita verso il web server) -s 192.168.200.1 -m state --state ESTABLISHED -j ACCEPT
+		iptables -t filter -A FORWARD -p tcp --sport http -o eth0(interfaccia ingresso verso il client) -i eth0(interfaccia in uscita verso il web server) -s 192.168.200.1 -m state --state ESTABLISHED -j ACCEPT
 	
 	#PERMETTERE AL SERVER MAIL TRAFFICO SULLA PORTA SMTP
 		iptables -t filter -A FORWARD -p tcp --dport smtp -i eth0(interfaccia ingresso verso il client) -o eth0(interfaccia in uscita verso il mail server) -d 192.168.200.1 -m state --state NEW,ESTABLISHED -j ACCEPT
@@ -132,7 +143,7 @@
 	
 	#REGOLE DI NAT [10.0.1.129 corrisponde al server nella dmz]
 		iptables -t nat -A POSTROUTING -p tcp --dport www -s (netid da mascherare) -o eth1 -j MASQUERADE
-		iptables -t nat -A PREROUTING -i eth1 -p tcp --dport -d (IP del firewall in ingresso) www -j DNAT --to-destination (IP del server dopo l'uscita del firewall)
+		iptables -t nat -A PREROUTING -i eth1 -p tcp --dport www -d (IP del firewall in ingresso) -j DNAT --to-destination (IP del server dopo l'uscita del firewall)
 		#per testare dnat server fare netcat al server al posto che al server di destinazione come port forwarding
 
 	------------------------------------------------------------------
