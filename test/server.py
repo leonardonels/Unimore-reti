@@ -6,6 +6,8 @@ import time
 import os
 import re
 
+import random
+
 # Standard loopback interface address (localhost)
 HOST = '127.0.0.1'
 #HOST = sys.argv[1]
@@ -27,6 +29,42 @@ def upper_case(x):
 def lower_case(x):
         return x.lower()
 
+def decadimento_auditivo(seme, iterazioni):
+        random.seed(seme)  # Imposta il seme per la generazione dei numeri casuali
+        risultati = []
+        valore_corrente = seme
+
+        for _ in range(iterazioni):
+                valore_corrente *= random.uniform(0.8, 1.0)  # Genera un fattore di decadimento casuale tra 0.8 e 1.0
+                risultati.append(valore_corrente)
+
+        stringa_risultati = ', '.join(str(valore) for valore in risultati)
+
+        return stringa_risultati
+
+def look_and_say_sequence(seed, iterations):
+        sequence = str(seed)
+        result = ''
+    
+        for _ in range(iterations):
+                new_sequence = ""
+                count = 1
+                prev_digit = sequence[0]
+        
+                for i in range(1, len(sequence)):
+                        if sequence[i] == prev_digit:
+                                count += 1
+                        else:
+                                new_sequence += str(count) + prev_digit
+                                count = 1
+                                prev_digit = sequence[i]
+                
+                new_sequence += str(count) + prev_digit
+                sequence = new_sequence
+                result = (result+sequence+'\r\n')
+    
+        return result
+
 def serve_request(conn):
 	# receive request from client
 	request = conn.recv(1024).decode('ascii')
@@ -34,7 +72,7 @@ def serve_request(conn):
 	print(request)
 
 	#control request
-	m = re.match(r'^([A-Za-z]+)$', request)
+	m = re.match(r'^([1-9]),([0-9]+)\r\n$', request)
 
 #	reply = get_hostname()
 #	conn.sendall(reply.encode('ascii'))
@@ -43,19 +81,21 @@ def serve_request(conn):
 	
 	if not m:
 		# wrong request
-		conn.sendall('+ERR\r\n'.encode('ascii'))
+		conn.sendall('-ERR\r\n'.encode('ascii'))
 	else:
 		# right request
 		# get parameters from request
 
 		#x = m.group(1),	return a str
+		seed=m.group(1)
+		ninteractions=m.group(2)
 		
 		# send response line
-		msg = '+OK\r\n'
+		msg = '+OK '+str(ninteractions)+' interactions on seed '+str(seed)+'\r\n'
 		conn.sendall(msg.encode('ascii'))
 		# process request
 
-		reply = upper_case(request)
+		reply = look_and_say_sequence(int(seed), int(ninteractions))
 
                 # send reply
 		conn.sendall(reply.encode('ascii'))

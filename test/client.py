@@ -17,16 +17,21 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
 	s.connect((HOST, PORT))
 
 	# request to server
-	request = input('Enter your request:\r\n')
+	tmp = input('Enter your request:\r\n')
+	request = (tmp+'\r\n')
 #	request = get_hostname()
 	s.sendall(request.encode('ascii'))
 
 	# message from server
 	msg = s.recv(1024).decode('ascii')
+	msg = msg.replace("\r\n","")
 	print(msg)
 
 	# reply from server
 	reply = s.recv(1024).decode('ascii')
+
+#	reply = reply.replace("token from client: ","")
+	
 	print(reply)
 
 	# close socket
