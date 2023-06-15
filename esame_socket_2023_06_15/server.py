@@ -10,7 +10,7 @@ import ipaddress
 
 # Standard loopback interface address (localhost)
 HOST = '127.0.0.1'
-# Port to listen on (non-privileged ports are > 1023)
+# Porta su cui ascoltare (le porte non riservate sono > 1023)
 PORT = 8080
 
 def verifica_coerenza(indirizzo_ipv4, netmask):
@@ -35,55 +35,39 @@ def calcola_indirizzi_sottorete(indirizzo_ipv4, netmask):
         return str(indirizzo_minimo), str(indirizzo_massimo)
 
 def serve_request(conn):
-	# receive request from client
+	# riceve la richiesta dal client
 	request_json = conn.recv(1024).decode('ascii')
-	# print for debug	
+	# stampa per debug	
 	print(request_json)
 
-	#
+        # isola le due variabiloi dalla richiesta in formato Json
 	request = json.loads(request_json)
 	ip = request["netid"]
 	netmask = request["netmaskCIDR"]
-	#print(ip)
-	#print(netmask)
 
-	#
+        #verifica che le due variabili siano coerenti tra loro
 	b=verifica_coerenza(ip, netmask)
 
-	# control
+	# logica
 	if not b:
-		# file not found
+		# non coerente
 		reply = {"status": "ERROR"}
 		reply_json = json.dumps(reply)
 		conn.sendall(reply_json.encode('ascii'))
 	else:
-		# file found
-		#conn.sendall(f'OK: File {filename} found, sending information...\r\n'.encode('ascii'))
-
-		# process request
-		#filesize = os.stat(f'files/{filename}').st_size	# return size in Bytes
-
+		# coerente
+		
+		# trova gli indirizzi minimi e massimi
 		indirizzo_min, indirizzo_max = calcola_indirizzi_sottorete(ip, netmask)
 
+                # prepara la risposta
 		reply = {"status": "OK", "IPmin": indirizzo_min, "IPmax": indirizzo_max}
 		reply_json = json.dumps(reply)
 
-		# send reply
-		#time.sleep(0.5)
+		# spedisce la risposta
 		conn.sendall(reply_json.encode('ascii'))
-		#conn.sendall(f'\n<{filesize} bytes of file content>'.encode('ascii'))
 
-		# opening file found and reading content
-		#f = open(f'files/{filename}', "r")
-		#content = f.read()
-		#f.close()
-
-		# send content to client
-		#time.sleep(1)
-		#conn.sendall(content.encode('ascii'))
-
-		# sleep for 1 second to wait the client to close the socket
-		#time.sleep(1)
+                #chiude la connessione
 		conn.close()
 
 """
@@ -106,19 +90,19 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
 	while True:
 		# ACCEPT
 		conn, addr = s.accept()
-		# fork, generating child
+		# fork, genera il figlio
 		pid = os.fork()
-		# parent with pid > 0
+		# padre con pid > 0
 		if pid > 0:
 			"""
 			print("I am parent process:")
 			print("Process ID:", os.getpid())
 			print("Child's process ID:", pid)
 			"""
-			# close parent process side socket
+			# chiude la socked dal lato del padre
 			conn.close()
 
-		# child with pid = 0
+		# figlio con pid = 0
 		else:
 			"""
 			print("\nI am child process:")
@@ -126,9 +110,10 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
 			print("Parent's process ID:", os.getppid())
 			"""
 
-			# serve client request
+			# serve la richiesta del client
 			serve_request(conn)
-			# close child process, parent process still running
+			# chiude il processo figlio
+			# il padre continua ad andare in attesa di altre richieste
 			sys.exit()
 
 
