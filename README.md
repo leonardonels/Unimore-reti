@@ -1,4 +1,4 @@
-	# UNIMORE-reti
+	# Bibbia UNIMORE-reti
 	
 	#nano /etc/network/interfaces
 	#vale per nodi statici o per il dhcp_server nel caso di reti dhcp
